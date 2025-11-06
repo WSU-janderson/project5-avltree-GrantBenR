@@ -34,6 +34,7 @@ class AVLTree {
         bool removeNode(AVLNode*& current);
         // You will implement this, but it is needed for removeNode()
         void balanceNode(AVLNode*& node);
+        friend std::ostream& operator<<(ostream& os, const AVLTree & avlTree);
 };
 
 #endif //AVLTREE_H

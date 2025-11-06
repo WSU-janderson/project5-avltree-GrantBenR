@@ -3,21 +3,37 @@
 
 #include "AVLNode.h"
 
+#include <ostream>
 #include <utility>
 
 /**
  *
+ * Default Constructor
+ *
  */
-AVLNode::AVLNode()
+AVLNode::AVLNode() : value(0), height(0), left(nullptr), right(nullptr)
 {
 
 }
 
 /**
  *
+ * Customized Constructor
+ *
+ * @param key
+ * @param node_value
+ * @param left_value
+ * @param right_value
+ */
+AVLNode::AVLNode(std::string key,size_t node_value, AVLNode* left_value, AVLNode* right_value) : key(std::move(key)), value(node_value), left(left_value), right(right_value)
+{
+ this->setHeight(this->getHeight());
+}
+/**
+ *
  * @param left_value
  */
-void AVLNode::SetLeft(AVLNode* left_value)
+void AVLNode::setLeft(AVLNode* left_value)
 {
     this->left = left_value;
 }
@@ -26,7 +42,7 @@ void AVLNode::SetLeft(AVLNode* left_value)
  *
  * @return
  */
-AVLNode* AVLNode::GetLeft() const
+AVLNode* AVLNode::getLeft() const
 {
     return left;
 }
@@ -35,7 +51,7 @@ AVLNode* AVLNode::GetLeft() const
  *
  * @param right_value
  */
-void AVLNode::SetRight(AVLNode* right_value)
+void AVLNode::setRight(AVLNode* right_value)
 {
     this->right = right_value;
 }
@@ -44,7 +60,7 @@ void AVLNode::SetRight(AVLNode* right_value)
  *
  * @return
  */
-AVLNode* AVLNode::GetRight() const
+AVLNode* AVLNode::getRight() const
 {
     return right;
 }
@@ -53,7 +69,7 @@ AVLNode* AVLNode::GetRight() const
  *
  * @param key_value
  */
-void AVLNode::SetKey(std::string key_value)
+void AVLNode::setKey(std::string key_value)
 {
     this->key = std::move(key_value);
 }
@@ -62,7 +78,7 @@ void AVLNode::SetKey(std::string key_value)
  *
  * @return
  */
-std::string AVLNode::GetKey() const
+std::string AVLNode::getKey() const
 {
     return key;
 }
@@ -71,7 +87,7 @@ std::string AVLNode::GetKey() const
  *
  * @param new_value
  */
-void AVLNode::SetValue(const size_t new_value)
+void AVLNode::setValue(const size_t new_value)
 {
     this->value = new_value;
 }
@@ -80,7 +96,7 @@ void AVLNode::SetValue(const size_t new_value)
  *
  * @return
  */
-size_t AVLNode::GetValue() const
+size_t AVLNode::getValue() const
 {
     return this->value;
 }
@@ -89,7 +105,7 @@ size_t AVLNode::GetValue() const
  *
  * @param height_value
  */
-void AVLNode::SetHeight(const size_t height_value)
+void AVLNode::setHeight(const size_t height_value)
 {
     this->height = height_value;
 }
@@ -98,33 +114,49 @@ void AVLNode::SetHeight(const size_t height_value)
  *
  * @return
  */
-size_t AVLNode::GetHeight() const
+size_t AVLNode::numChildren() const
 {
+    size_t num_children = 0;
+    if (getRight())
+    {
+        num_children += 1;
+    }
+    if (getLeft())
+    {
+        num_children += 1;
+    }
+    return num_children;
+}
+
+/**
+ *
+ * If the Node has no left or right value it is a leaf on the BST
+ *
+ * @return
+ */
+bool AVLNode::isLeaf() const
+{
+    if (getLeft() && getRight())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
+/**
+ *
+ *
+ *
+ * @return
+ */
+size_t AVLNode::getHeight() const
+{
+
     return this->height;
-}
-
-/**
- *
- * @return
- */
-size_t AVLNode::numChildren() const {
-    return 0;
-}
-
-/**
- *
- * @return
- */
-bool AVLNode::isLeaf() const {
-    return false;
-}
-
-/**
- *
- * @return
- */
-size_t AVLNode::getHeight() const {
-    return 0;
 }
 
 /**
@@ -135,5 +167,6 @@ size_t AVLNode::getHeight() const {
  */
 std::ostream& operator<<(std::ostream& os, const AVLNode& avlNode)
 {
+    os << "{\"" << avlNode.getKey() << "\": " << avlNode.getValue() << "}" << std::endl;
     return os;
 }

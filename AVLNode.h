@@ -18,19 +18,21 @@ class AVLNode
 
     public:
         AVLNode();
-        void SetLeft(AVLNode* left_value);
-        AVLNode* GetLeft() const;
-        void SetRight(AVLNode* right_value);
-        AVLNode* GetRight() const;
-        void SetKey(std::string key_value);
-        std::string GetKey() const;
-        void SetValue(size_t new_value);
-        size_t GetValue() const;
-        void SetHeight(size_t height_value);
+        AVLNode(std::string key, size_t node_value, AVLNode* left_value, AVLNode* right_value);
+        void setLeft(AVLNode* left_value);
+        AVLNode* getLeft() const;
+        void setRight(AVLNode* right_value);
+        AVLNode* getRight() const;
+        void setKey(std::string key_value);
+        std::string getKey() const;
+        void setValue(size_t new_value);
+        size_t getValue() const;
+        void setHeight(size_t height_value);
         size_t GetHeight() const;
         size_t numChildren() const;
         bool isLeaf() const;
         size_t getHeight() const;
+        friend std::ostream& operator<<(std::ostream& os, const AVLNode& avlNode);
 };
 
 

@@ -180,35 +180,33 @@ bool AVLTree::removeNode(AVLNode*& current){
     AVLNode* toDelete = current;
     auto nChildren = current->numChildren();
     if (current->isLeaf()) {
-        // case 1 we can delete the node
+        // case 1 we can deletes the node
         current = nullptr;
     } else if (current->numChildren() == 1) {
         // case 2 - replace current with its only child
-        if (current->right) {
-            current = current->right;
+        if (current->getRight()) {
+            current = current->getRight();
         } else {
-            current = current->left;
+            current = current->getLeft();
         }
     } else {
         // case 3 - we have two children,
         // get smallest key in right subtree by
         // getting right child and go left until left is null
-        AVLNode* smallestInRight = current->right;
+        AVLNode* smallestInRight = current->getRight();
         // I could check if smallestInRight is null,
         // but it shouldn't be since the node has two children
-        while (smallestInRight->left) {
-            smallestInRight = smallestInRight->left;
+        while (smallestInRight->getLeft()) {
+            smallestInRight = smallestInRight->getLeft();
         }
-        std::string newKey = smallestInRight->key;
-        int newValue = smallestInRight->value;
-        remove(root, smallestInRight->key); // delete this one
+        const std::string newKey = smallestInRight->getKey();
+        const int newValue = static_cast<int>(smallestInRight->getValue());
+        remove(root, smallestInRight->getKey()); // delete this one
 
-        current->key = newKey;
-        current->value = newValue;
-
-        current->height = current->getHeight();
+        current->setKey(newKey);
+        current->setValue(newValue);
+        current->setHeight(current->getHeight());
         balanceNode(current);
-
         return true; // we already deleted the one we needed to so return
     }
     delete toDelete;
