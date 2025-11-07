@@ -32,6 +32,7 @@ class AVLNode
         size_t numChildren() const;
         bool isLeaf() const;
         size_t getHeight() const;
+        size_t recalculateHeight();
         friend std::ostream& operator<<(std::ostream& os, const AVLNode& avlNode);
 };
 

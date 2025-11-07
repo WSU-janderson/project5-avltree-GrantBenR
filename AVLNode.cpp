@@ -149,14 +149,46 @@ bool AVLNode::isLeaf() const
 
 /**
  *
- *
- *
  * @return
  */
 size_t AVLNode::getHeight() const
 {
-
     return this->height;
+}
+
+/**
+ *
+ * @return
+ */
+size_t AVLNode::recalculateHeight()
+{
+    AVLNode* current = this;
+    size_t total_height = 0;
+    size_t left_height = 0;
+    size_t right_height = 0;
+    if (!current->isLeaf())
+    {
+        AVLNode* left_ptr = current->getLeft();
+        AVLNode* right_ptr = current->getRight();
+        if (left_ptr)
+        {
+            left_height = left_ptr->recalculateHeight();
+            if (left_height > total_height)
+            {
+                total_height = left_height;
+            }
+        }
+        if (right_ptr)
+        {
+            right_height = right_ptr->recalculateHeight();
+            if (right_height > total_height)
+            {
+                total_height = right_height;
+            }
+        }
+    }
+    this->setHeight(total_height);
+    return total_height;
 }
 
 /**
