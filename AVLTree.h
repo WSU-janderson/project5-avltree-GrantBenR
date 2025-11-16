@@ -38,8 +38,8 @@ class AVLTree {
         AVLTree(const AVLTree& other);
         AVLTree& operator=(const AVLTree& other);
         ~AVLTree();
-        AVLNode*& getRightMostNode();
-        AVLNode*& getLeftMostNode();
+        AVLNode*& getRightMostNode(AVLNode*& node);
+        AVLNode*& getLeftMostNode(AVLNode*& node);
         std::vector<AVLNode*>& getNodesRightFirst();
         size_t hash(const std::string& str) const;
         size_t getIndex(AVLNode* node);

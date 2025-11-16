@@ -380,7 +380,7 @@ bool AVLTree::recursiveDestroyNode(AVLNode* node_to_destroy)
         return false;
     }
 }
-std::ostream& operator<<(ostream& os, const AVLTree & avlTree)
+std::ostream& operator<<(ostream& os, const AVLTree& avlTree)
 {
     auto nodes = avlTree.getNodesRightFirst();
 
@@ -390,9 +390,9 @@ std::ostream& operator<<(ostream& os, const AVLTree & avlTree)
  *
  * @return
  */
-AVLNode*& AVLTree::getRightMostNode()
+AVLNode*& AVLTree::getRightMostNode(AVLNode*& node)
 {
-    AVLNode*& rightmost_node = this->getRoot();
+    AVLNode*& rightmost_node = node;
     while (rightmost_node->getRight() != nullptr)
     {
         rightmost_node = rightmost_node->getRightRef();
@@ -403,9 +403,9 @@ AVLNode*& AVLTree::getRightMostNode()
  *
  * @return
  */
-AVLNode*& AVLTree::getLeftMostNode()
+AVLNode*& AVLTree::getLeftMostNode(AVLNode*& node)
 {
-    AVLNode*& leftmost_node = this->getRoot();
+    AVLNode*& leftmost_node = node;
     while (leftmost_node->getLeft() != nullptr)
     {
         leftmost_node = leftmost_node->getLeftRef();
@@ -414,7 +414,7 @@ AVLNode*& AVLTree::getLeftMostNode()
 }
 std::vector<AVLNode*>& AVLTree::getNodesRightFirst()
 {
-    AVLNode*& rightmost_node = this->getRightMostNode();
+    AVLNode*& rightmost_node = this->getRightMostNode(this->getRoot());
     auto nodes = new std::vector<AVLNode*>();
     nodes = this->getNodesRightFirstRecursion(rightmost_node, nodes);
     return *nodes;
