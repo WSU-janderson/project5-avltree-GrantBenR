@@ -444,41 +444,40 @@ void AVLTree::rightRotate(AVLNode*& y_node)
 
 /**
  *
+ *      x                                 y
+ *     / \                               / \
+ *    T1  y           ----->            x   T3
+ *       / \                           / \
+ *      T2  T3                        T1  T2
+ *
  * @param node
  */
-void AVLTree::leftRotate(AVLNode*& y_node)
+void AVLTree::leftRotate(AVLNode*& x_node)
 {
-    AVLNode*& x_node = y_node->getLeftRef();
+    AVLNode*& y_node = x_node->getRightRef();
     AVLNode*& T1_node = x_node->getLeftRef();
-    AVLNode*& T2_node = x_node->getRightRef();
+    AVLNode*& T2_node = y_node->getLeftRef();
     AVLNode*& T3_node = y_node->getRightRef();
 
-    x_node->setType(y_node->getType());
-    x_node->setRight(y_node);
-    x_node->setLeft(T1_node);
-    if (T1_node != nullptr)
-    {
-        T1_node->setType(NodeType::LEFT);
-    }
-    y_node->setLeft(T2_node);
-    if (T2_node != nullptr)
-    {
-        T2_node->setType(NodeType::LEFT);
-    }
+    y_node->setType(x_node->getType());
     y_node->setRight(T3_node);
     if (T3_node != nullptr)
     {
         T3_node->setType(NodeType::RIGHT);
     }
-    y_node->setType(NodeType::RIGHT);
-
+    y_node->setLeft(x_node);
+    x_node->setType(NodeType::LEFT);
 
     x_node->setLeft(T1_node);
     if (T1_node != nullptr)
     {
         T1_node->setType(NodeType::LEFT);
     }
-    x_node->setType(y_node->getType());
+    x_node->setRight(T2_node);
+    if (T2_node != nullptr)
+    {
+        T2_node->setType(NodeType::RIGHT);
+    }
 
     x_node->recalculateHeight();
     y_node->recalculateHeight();
