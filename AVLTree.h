@@ -43,7 +43,7 @@ class AVLTree {
         // You will implement this, but it is needed for removeNode()
         void balanceNode(AVLNode*& node);
         void rightRotate(AVLNode*& y_node);
-        void leftRotate(AVLNode*& y_node);
+        void leftRotate(AVLNode*& x_node);
         void leftLeftRotation(AVLNode*& y_node);
         void rightRightRotation(AVLNode*& y_node);
         void leftRightRotation(AVLNode*& y_node);

@@ -364,33 +364,76 @@ void AVLTree::balanceNode(AVLNode *&node)
     int node_balance = node->getBalance();
     if (node_balance > 1)
     {
-        if (node->isRight())
+        AVLNode*& left_node = node->getLeftRef();
+        if (left_node != nullptr)
         {
-            this->leftRightRotation(node);
+            int left_balance = left_node->getBalance();
+            if (left_balance > 0)
+            {
+                this->leftLeftRotation(node);
+                return;
+            }
+            else if (left_node->getBalance() < 0)
+            {
+                this->leftRightRotation(node);
+                return;
+            }
         }
-        else if (node->isLeft())
+        AVLNode*& right_node = node->getRightRef();
+        if (right_node != nullptr)
         {
-            this->leftLeftRotation(node);
-        }
-        else
-        {
+            int right_balance = right_node->getBalance();
 
+            if (right_balance < 0)
+            {
+                this->rightRightRotation(node);
+                return;
+
+            }
+            else if (right_balance > 0)
+            {
+                this->rightLeftRotation(node);
+                return;
+            }
         }
     }
-    if (node_balance < -1)
+    else if (node_balance < -1)
     {
-        if (node->isRight())
+        AVLNode*& left_node = node->getLeftRef();
+        if (left_node != nullptr)
         {
-            this->rightRightRotation(node);
+            int left_balance = left_node->getBalance();
+            if (left_balance > 0)
+            {
+                this->leftLeftRotation(node);
+                return;
+            }
+            else if (left_node->getBalance() < 0)
+            {
+                this->leftRightRotation(node);
+                return;
+            }
         }
-        else if (node->isLeft())
+        AVLNode*& right_node = node->getRightRef();
+        if (right_node != nullptr)
         {
-            this->rightLeftRotation(node);
-        }
-        else
-        {
+            int right_balance = right_node->getBalance();
 
+            if (right_balance < 0)
+            {
+                this->rightRightRotation(node);
+                return;
+            }
+            else if (right_balance > 0)
+            {
+                this->rightLeftRotation(node);
+                return;
+            }
         }
+    }
+    else
+    {
+        return;
     }
 }
 
@@ -499,7 +542,7 @@ void AVLTree::leftLeftRotation(AVLNode *& y_node)
  */
 void AVLTree::rightRightRotation(AVLNode *&node)
 {
-
+    this->leftRotate(node);
 }
 
 /**
@@ -508,7 +551,9 @@ void AVLTree::rightRightRotation(AVLNode *&node)
  */
 void AVLTree::leftRightRotation(AVLNode *&node)
 {
-
+    AVLNode* first_rot_node = node->getLeftRef();
+    this->leftRotate(first_rot_node);
+    this->rightRotate(node);
 }
 
 /**
@@ -517,5 +562,7 @@ void AVLTree::leftRightRotation(AVLNode *&node)
  */
 void AVLTree::rightLeftRotation(AVLNode *&node)
 {
-
+    AVLNode* first_rot_node = node->getLeftRef();
+    this->leftRotate(first_rot_node);
+    this->rightRotate(node);
 }
