@@ -145,13 +145,46 @@ AVLNode*& AVLTree::getRoot() const
 }
 /**
  *
+ * @param value
+ * @param key
+ */
+AVLTree::AVLTree(const std::string& key, size_t value)
+{
+    auto new_root = new AVLNode(key, value, nullptr, nullptr);
+    this->root = new_root;
+}
+
+AVLTree::AVLTree(std::vector<std::pair<std::string, size_t>> pairs)
+{
+    if (!pairs.empty())
+    {
+        std::pair<std::string, size_t> pair = pairs[0];
+        AVLNode* node = new AVLNode(pair.first, pair.second, nullptr, nullptr);
+        this->root = node;
+        for (size_t i = 1; i < pairs.size(); i++)
+        {
+            pair = pairs[i];
+            this->insert(pair.first, pair.second);
+        }
+    }
+    else
+    {
+        root = nullptr;
+    }
+}
+/**
+ *
  * @param other
  */
 AVLTree::AVLTree(const AVLTree& other)
 {
-
+    this->root = other.getRoot();
 }
 
+void AVLTree::setRoot(AVLNode*& new_root)
+{
+    this->root = new_root;
+}
 
 /**
  *
@@ -208,14 +241,14 @@ AVLNode*& AVLTree::getRightMostNode()
     return rightmost_node;
 }
 
-std::vector<AVLNode*&> AVLTree::getNodesRightFirst()
+std::vector<AVLNode*>& AVLTree::getNodesRightFirst()
 {
     AVLNode*& rightmost_node = this->getRightMostNode();
-    std::vector<AVLNode*&>* nodes = new std::vector<AVLNode*&>();
+    auto nodes = new std::vector<AVLNode*>();
     nodes = this->getNodesRightFirstRecursion(rightmost_node, nodes);
-    return nodes;
+    return *nodes;
 }
-std::vector<AVLNode*&> AVLTree::getNodesRightFirstRecursion(AVLNode* current, std::vector<AVLNode*&>* nodes)
+std::vector<AVLNode*>*& AVLTree::getNodesRightFirstRecursion(AVLNode* current, std::vector<AVLNode*>*& nodes)
 {
     if (!current->isLeaf())
     {
@@ -223,12 +256,13 @@ std::vector<AVLNode*&> AVLTree::getNodesRightFirstRecursion(AVLNode* current, st
         if (right != nullptr)
         {
             nodes->push_back(right);
-            this->getNodesRightFirstRecursion(current, nodes);
+            nodes = this->getNodesRightFirstRecursion(current, nodes);
         }
         AVLNode* left = current->getLeft();
         if (left != nullptr)
         {
-            this->getNodesRightFirstRecursion(current, nodes);
+            nodes->push_back(left);
+            nodes = this->getNodesRightFirstRecursion(current, nodes);
         }
     }
     return nodes;

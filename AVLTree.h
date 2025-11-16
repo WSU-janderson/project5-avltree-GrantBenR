@@ -15,7 +15,8 @@ using namespace std;
 class AVLTree {
     private:
         AVLNode *&root;
-        std::vector<AVLNode*&>* getNodesRightFirstRecursion(AVLNode* current, std::vector<AVLNode*&>* nodes);
+        void setRoot(AVLNode*& new_root);
+        std::vector<AVLNode*>*& getNodesRightFirstRecursion(AVLNode* current, std::vector<AVLNode*>*& nodes);
         bool recursiveDestroyNode(AVLNode* node_to_destroy);
     public:
         using KeyType = std::string;
@@ -34,7 +35,7 @@ class AVLTree {
         AVLTree& operator=(const AVLTree& other);
         ~AVLTree();
         AVLNode*& getRightMostNode();
-        std::vector<AVLNode*&> getNodesRightFirst();
+        std::vector<AVLNode*>& getNodesRightFirst();
         bool insert(const std::string& key, size_t value);
         // removeNode contains the logic for actually removing a node based on the numebr of children
         bool removeNode(AVLNode*& current);
