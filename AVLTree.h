@@ -15,9 +15,12 @@ using namespace std;
 class AVLTree {
     private:
         AVLNode *&root;
+        static const std::hash<std::string> hasher;
         void setRoot(AVLNode*& new_root);
         std::vector<AVLNode*>*& getNodesRightFirstRecursion(AVLNode* current, std::vector<AVLNode*>*& nodes);
         bool recursiveDestroyNode(AVLNode* node_to_destroy);
+        void balanceNodePos(AVLNode*& node);
+        void balanceNodeNeg(AVLNode*& node);
     public:
         using KeyType = std::string;
         using ValueType = size_t;
@@ -37,6 +40,8 @@ class AVLTree {
         AVLNode*& getRightMostNode();
         AVLNode*& getLeftMostNode();
         std::vector<AVLNode*>& getNodesRightFirst();
+        size_t hash(const std::string& str) const;
+        size_t getIndex(AVLNode*& node);
         bool insert(const std::string& key, size_t value);
         // removeNode contains the logic for actually removing a node based on the numebr of children
         bool removeNode(AVLNode*& current);
@@ -45,9 +50,9 @@ class AVLTree {
         void rightRotate(AVLNode*& y_node);
         void leftRotate(AVLNode*& x_node);
         void leftLeftRotation(AVLNode*& y_node);
-        void rightRightRotation(AVLNode*& y_node);
-        void leftRightRotation(AVLNode*& y_node);
-        void rightLeftRotation(AVLNode*& y_node);
+        void rightRightRotation(AVLNode*& x_node);
+        void leftRightRotation(AVLNode*& node);
+        void rightLeftRotation(AVLNode*& node);
         bool recursivePrintNode(AVLNode* current);
         friend std::ostream& operator<<(ostream& os, const AVLTree & avlTree);
 };

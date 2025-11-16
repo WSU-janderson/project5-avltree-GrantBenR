@@ -4,6 +4,25 @@
 #include <string>
 #include <vector>
 
+
+const std::hash<std::string> AVLTree::hasher = std::hash<std::string>{};
+/**
+ * Hash a string using the builtin static hasher defined above
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
+ * @param str
+ * @return
+ */
+size_t AVLTree::hash(const std::string& str) const
+{
+    return hasher(str);
+}
+size_t AVLTree::getIndex(AVLNode*& node)
+{
+    return hash(node->getKey());
+}
 /**
  *
  * Insert a new key-value pair into the tree. After a sucessful insert, the tree is rebalanced if necessary.
@@ -17,7 +36,38 @@
  */
 bool AVLTree::insert(const std::string& key, size_t value)
 {
-    return 0;
+    size_t new_index = hash(key);
+    AVLNode*& current = this->getRoot();
+    if (current != nullptr)
+    {
+        size_t existing_index = 0;
+        while (current != nullptr)
+        {
+            existing_index = getIndex(current);
+            if (new_index < existing_index)
+            {
+                current = current->getLeftRef();
+            }
+            else if (new_index > existing_index)
+            {
+                current = current->getRightRef();
+            }
+            else
+            {
+                return false;
+            }
+        }
+        current = new AVLNode(key, value, nullptr, nullptr);
+        current->recalculateHeight();
+        this->balanceNode(this->getRoot());
+        return true;
+    }
+    else
+    {
+        // If the BST is empty and there is no root
+        this->root = new AVLNode(key, value, nullptr, nullptr);
+        return true;
+    }
 }
 
 /**
@@ -364,76 +414,86 @@ void AVLTree::balanceNode(AVLNode *&node)
     int node_balance = node->getBalance();
     if (node_balance > 1)
     {
-        AVLNode*& left_node = node->getLeftRef();
-        if (left_node != nullptr)
-        {
-            int left_balance = left_node->getBalance();
-            if (left_balance > 0)
-            {
-                this->leftLeftRotation(node);
-                return;
-            }
-            else if (left_node->getBalance() < 0)
-            {
-                this->leftRightRotation(node);
-                return;
-            }
-        }
-        AVLNode*& right_node = node->getRightRef();
-        if (right_node != nullptr)
-        {
-            int right_balance = right_node->getBalance();
-
-            if (right_balance < 0)
-            {
-                this->rightRightRotation(node);
-                return;
-
-            }
-            else if (right_balance > 0)
-            {
-                this->rightLeftRotation(node);
-                return;
-            }
-        }
+        this->balanceNodePos(node);
     }
     else if (node_balance < -1)
     {
-        AVLNode*& left_node = node->getLeftRef();
-        if (left_node != nullptr)
-        {
-            int left_balance = left_node->getBalance();
-            if (left_balance > 0)
-            {
-                this->leftLeftRotation(node);
-                return;
-            }
-            else if (left_node->getBalance() < 0)
-            {
-                this->leftRightRotation(node);
-                return;
-            }
-        }
-        AVLNode*& right_node = node->getRightRef();
-        if (right_node != nullptr)
-        {
-            int right_balance = right_node->getBalance();
-
-            if (right_balance < 0)
-            {
-                this->rightRightRotation(node);
-                return;
-            }
-            else if (right_balance > 0)
-            {
-                this->rightLeftRotation(node);
-                return;
-            }
-        }
+        this->balanceNodeNeg(node);
     }
     else
     {
         return;
+    }
+}
+
+void AVLTree::balanceNodePos(AVLNode*& node)
+{
+    AVLNode*& left_node = node->getLeftRef();
+    if (left_node != nullptr)
+    {
+        int left_balance = left_node->getBalance();
+        if (left_balance > 0)
+        {
+            this->leftLeftRotation(node);
+            return;
+        }
+        else if (left_node->getBalance() < 0)
+        {
+            this->leftRightRotation(node);
+            return;
+        }
+    }
+    AVLNode*& right_node = node->getRightRef();
+    if (right_node != nullptr)
+    {
+        int right_balance = right_node->getBalance();
+
+        if (right_balance < 0)
+        {
+            this->rightRightRotation(node);
+            return;
+
+        }
+        else if (right_balance > 0)
+        {
+            this->rightLeftRotation(node);
+            return;
+        }
+    }
+}
+
+void AVLTree::balanceNodeNeg(AVLNode*& node)
+{
+    AVLNode*& left_node = node->getLeftRef();
+    if (left_node != nullptr)
+    {
+        int left_balance = left_node->getBalance();
+        if (left_balance > 0)
+        {
+            this->leftLeftRotation(node);
+            return;
+        }
+        else if (left_node->getBalance() < 0)
+        {
+            this->leftRightRotation(node);
+            return;
+        }
+    }
+    AVLNode*& right_node = node->getRightRef();
+    if (right_node != nullptr)
+    {
+        int right_balance = right_node->getBalance();
+
+        if (right_balance < 0)
+        {
+            this->rightRightRotation(node);
+            return;
+        }
+        else if (right_balance > 0)
+        {
+            this->rightLeftRotation(node);
+            return;
+        }
     }
 }
 
@@ -445,7 +505,7 @@ void AVLTree::balanceNode(AVLNode *&node)
  *      / \                            / \
  *     T1  T2                         T2  T3
  *
- * @param node
+ * @param y_node
  */
 void AVLTree::rightRotate(AVLNode*& y_node)
 {
@@ -493,7 +553,7 @@ void AVLTree::rightRotate(AVLNode*& y_node)
  *       / \                           / \
  *      T2  T3                        T1  T2
  *
- * @param node
+ * @param x_node
  */
 void AVLTree::leftRotate(AVLNode*& x_node)
 {
@@ -534,7 +594,7 @@ void AVLTree::leftRotate(AVLNode*& x_node)
  *      / \                            / \
  *     T1  T2                         T2  T3
  *
- * @param node
+ * @param y_node
  */
 void AVLTree::leftLeftRotation(AVLNode *& y_node)
 {
@@ -549,11 +609,11 @@ void AVLTree::leftLeftRotation(AVLNode *& y_node)
  *       / \                           / \
  *      T2  T3                        T1  T2
  *
- * @param node
+ * @param x_node
  */
-void AVLTree::rightRightRotation(AVLNode *&node)
+void AVLTree::rightRightRotation(AVLNode *&x_node)
 {
-    this->leftRotate(node);
+    this->leftRotate(x_node);
 }
 
 /**
