@@ -528,6 +528,11 @@ void AVLTree::leftRotate(AVLNode*& x_node)
 
 /**
  *
+ *          y                         x
+ *         / \                       / \
+ *        x   T3     ----->         T1  y
+ *      / \                            / \
+ *     T1  T2                         T2  T3
  *
  * @param node
  */
@@ -538,6 +543,12 @@ void AVLTree::leftLeftRotation(AVLNode *& y_node)
 
 /**
  *
+ *      x                                 y
+ *     / \                               / \
+ *    T1  y           ----->            x   T3
+ *       / \                           / \
+ *      T2  T3                        T1  T2
+ *
  * @param node
  */
 void AVLTree::rightRightRotation(AVLNode *&node)
@@ -546,6 +557,12 @@ void AVLTree::rightRightRotation(AVLNode *&node)
 }
 
 /**
+ *
+ *          x                         x
+ *         /                         /                        z
+ *        y          ----->         z          ----->        / \
+ *         \                       /                        y   x
+ *          z                     y
  *
  * @param node
  */
@@ -557,6 +574,12 @@ void AVLTree::leftRightRotation(AVLNode *&node)
 }
 
 /**
+ *
+ *          x                         x
+ *           \                         \                          z
+ *            y          ----->         z          ----->        / \
+ *           /                           \                      y   x
+ *          z                             y
  *
  * @param node
  */
