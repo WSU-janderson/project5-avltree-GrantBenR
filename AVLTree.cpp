@@ -178,7 +178,7 @@ AVLTree::AVLTree(std::vector<std::pair<std::string, size_t>> pairs)
  */
 AVLTree::AVLTree(const AVLTree& other)
 {
-    this->root = other.getRoot();
+
 }
 
 void AVLTree::setRoot(AVLNode*& new_root)
@@ -192,6 +192,7 @@ void AVLTree::setRoot(AVLNode*& new_root)
  */
 AVLTree& AVLTree::operator=(const AVLTree& other)
 {
+
     return *this;
 }
 

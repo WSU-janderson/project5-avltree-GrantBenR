@@ -32,10 +32,10 @@ class AVLNode
         size_t getValue() const;
         size_t& getValueRef();
         void setHeight(size_t height_value);
-        size_t GetHeight() const;
         size_t numChildren() const;
         bool isLeaf() const;
         size_t getHeight() const;
+        int getBalance() const;
         size_t recalculateHeight();
         friend std::ostream& operator<<(std::ostream& os, const AVLNode& avlNode);
 };

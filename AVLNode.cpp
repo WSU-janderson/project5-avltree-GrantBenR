@@ -187,6 +187,33 @@ size_t AVLNode::getHeight() const
 {
     return this->height;
 }
+/**
+ *
+ * @return
+ */
+int AVLNode::getBalance() const
+{
+    int balance = 0;
+    AVLNode* left_node = this->getLeft();
+    if (left_node != nullptr)
+    {
+        balance += static_cast<int>(left_node->getHeight());
+    }
+    else
+    {
+        balance -= 1;
+    }
+    AVLNode* right_node = this->getRight();
+    if (right_node != nullptr)
+    {
+        balance -= static_cast<int>(right_node->getHeight());
+    }
+    else
+    {
+        balance = balance + 1;
+    }
+    return balance;
+}
 
 /**
  *
