@@ -183,10 +183,86 @@ bool AVLNode::isLeaf() const
  *
  * @return
  */
+bool AVLNode::isRoot() const
+{
+    if (this->nodeType == NodeType::ROOT)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/**
+ *
+ * @return
+ */
+bool AVLNode::isLeft() const
+{
+    if (this->nodeType == NodeType::LEFT)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/**
+ *
+ * @return
+ */
+bool AVLNode::isRight() const
+{
+    if (this->nodeType == NodeType::RIGHT)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/**
+ *
+ * @param new_type
+ */
+void AVLNode::setType(NodeType new_type)
+{
+    this-> nodeType = new_type;
+}
+
+/**
+ *
+ * @return
+ */
+NodeType AVLNode::getType() const
+{
+    return this->nodeType;
+}
+
+/**
+ *
+ * @return
+ */
+NodeType& AVLNode::getTypeRef()
+{
+    return this->nodeType;
+}
+
+/**
+ *
+ * @return
+ */
 size_t AVLNode::getHeight() const
 {
     return this->height;
 }
+
 /**
  *
  * @return

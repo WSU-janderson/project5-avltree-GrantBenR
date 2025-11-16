@@ -228,10 +228,14 @@ bool AVLTree::recursiveDestroyNode(AVLNode* node_to_destroy)
 }
 std::ostream& operator<<(ostream& os, const AVLTree & avlTree)
 {
-    AVLNode* rightmost_node = avlTree.getRightMostNode();
+    auto nodes = avlTree.getNodesRightFirst();
 
     return os;
 }
+/**
+ *
+ * @return
+ */
 AVLNode*& AVLTree::getRightMostNode()
 {
     AVLNode*& rightmost_node = this->getRoot();
@@ -241,7 +245,19 @@ AVLNode*& AVLTree::getRightMostNode()
     }
     return rightmost_node;
 }
-
+/**
+ *
+ * @return
+ */
+AVLNode*& AVLTree::getLeftMostNode()
+{
+    AVLNode*& leftmost_node = this->getRoot();
+    while (leftmost_node->getLeft() != nullptr)
+    {
+        leftmost_node = leftmost_node->getLeftRef();
+    }
+    return leftmost_node;
+}
 std::vector<AVLNode*>& AVLTree::getNodesRightFirst()
 {
     AVLNode*& rightmost_node = this->getRightMostNode();
@@ -343,5 +359,164 @@ bool AVLTree::removeNode(AVLNode*& current)
  *
  * @param node
  */
-void AVLTree::balanceNode(AVLNode *&node) {
+void AVLTree::balanceNode(AVLNode *&node)
+{
+    int node_balance = node->getBalance();
+    if (node_balance > 1)
+    {
+        if (node->isRight())
+        {
+            this->leftRightRotation(node);
+        }
+        else if (node->isLeft())
+        {
+            this->leftLeftRotation(node);
+        }
+        else
+        {
+
+        }
+    }
+    if (node_balance < -1)
+    {
+        if (node->isRight())
+        {
+            this->rightRightRotation(node);
+        }
+        else if (node->isLeft())
+        {
+            this->rightLeftRotation(node);
+        }
+        else
+        {
+
+        }
+    }
+}
+
+/**
+ *
+ *          y                         x
+ *         / \                       / \
+ *        x   T3     ----->         T1  y
+ *      / \                            / \
+ *     T1  T2                         T2  T3
+ *
+ * @param node
+ */
+void AVLTree::rightRotate(AVLNode*& y_node)
+{
+    AVLNode*& x_node = y_node->getLeftRef();
+    AVLNode*& T1_node = x_node->getLeftRef();
+    AVLNode*& T2_node = x_node->getRightRef();
+    AVLNode*& T3_node = y_node->getRightRef();
+
+    x_node->setType(y_node->getType());
+    x_node->setRight(y_node);
+    x_node->setLeft(T1_node);
+    if (T1_node != nullptr)
+    {
+        T1_node->setType(NodeType::LEFT);
+    }
+    y_node->setLeft(T2_node);
+    if (T2_node != nullptr)
+    {
+        T2_node->setType(NodeType::LEFT);
+    }
+    y_node->setRight(T3_node);
+    if (T3_node != nullptr)
+    {
+        T3_node->setType(NodeType::RIGHT);
+    }
+    y_node->setType(NodeType::RIGHT);
+
+
+    x_node->setLeft(T1_node);
+    if (T1_node != nullptr)
+    {
+        T1_node->setType(NodeType::LEFT);
+    }
+    x_node->setType(y_node->getType());
+
+    x_node->recalculateHeight();
+    y_node->recalculateHeight();
+}
+
+/**
+ *
+ * @param node
+ */
+void AVLTree::leftRotate(AVLNode*& y_node)
+{
+    AVLNode*& x_node = y_node->getLeftRef();
+    AVLNode*& T1_node = x_node->getLeftRef();
+    AVLNode*& T2_node = x_node->getRightRef();
+    AVLNode*& T3_node = y_node->getRightRef();
+
+    x_node->setType(y_node->getType());
+    x_node->setRight(y_node);
+    x_node->setLeft(T1_node);
+    if (T1_node != nullptr)
+    {
+        T1_node->setType(NodeType::LEFT);
+    }
+    y_node->setLeft(T2_node);
+    if (T2_node != nullptr)
+    {
+        T2_node->setType(NodeType::LEFT);
+    }
+    y_node->setRight(T3_node);
+    if (T3_node != nullptr)
+    {
+        T3_node->setType(NodeType::RIGHT);
+    }
+    y_node->setType(NodeType::RIGHT);
+
+
+    x_node->setLeft(T1_node);
+    if (T1_node != nullptr)
+    {
+        T1_node->setType(NodeType::LEFT);
+    }
+    x_node->setType(y_node->getType());
+
+    x_node->recalculateHeight();
+    y_node->recalculateHeight();
+}
+
+/**
+ *
+ *
+ * @param node
+ */
+void AVLTree::leftLeftRotation(AVLNode *& y_node)
+{
+    this->rightRotate(y_node);
+}
+
+/**
+ *
+ * @param node
+ */
+void AVLTree::rightRightRotation(AVLNode *&node)
+{
+
+}
+
+/**
+ *
+ * @param node
+ */
+void AVLTree::leftRightRotation(AVLNode *&node)
+{
+
+}
+
+/**
+ *
+ * @param node
+ */
+void AVLTree::rightLeftRotation(AVLNode *&node)
+{
+
 }

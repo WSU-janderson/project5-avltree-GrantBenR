@@ -35,12 +35,19 @@ class AVLTree {
         AVLTree& operator=(const AVLTree& other);
         ~AVLTree();
         AVLNode*& getRightMostNode();
+        AVLNode*& getLeftMostNode();
         std::vector<AVLNode*>& getNodesRightFirst();
         bool insert(const std::string& key, size_t value);
         // removeNode contains the logic for actually removing a node based on the numebr of children
         bool removeNode(AVLNode*& current);
         // You will implement this, but it is needed for removeNode()
         void balanceNode(AVLNode*& node);
+        void rightRotate(AVLNode*& y_node);
+        void leftRotate(AVLNode*& y_node);
+        void leftLeftRotation(AVLNode*& y_node);
+        void rightRightRotation(AVLNode*& y_node);
+        void leftRightRotation(AVLNode*& y_node);
+        void rightLeftRotation(AVLNode*& y_node);
         bool recursivePrintNode(AVLNode* current);
         friend std::ostream& operator<<(ostream& os, const AVLTree & avlTree);
 };

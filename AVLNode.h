@@ -6,6 +6,7 @@
 #define AVLTREE_AVLNODE_H
 #include <string>
 
+enum class NodeType {ROOT, LEFT, RIGHT};
 
 class AVLNode
 {
@@ -15,7 +16,7 @@ class AVLNode
         size_t height;
         AVLNode* left;
         AVLNode* right;
-
+        NodeType nodeType;
     public:
         AVLNode();
         AVLNode(std::string key, size_t node_value, AVLNode* left_value, AVLNode* right_value);
@@ -34,6 +35,12 @@ class AVLNode
         void setHeight(size_t height_value);
         size_t numChildren() const;
         bool isLeaf() const;
+        bool isRoot() const;
+        bool isLeft() const;
+        bool isRight() const;
+        void setType(NodeType new_type);
+        NodeType getType() const;
+        NodeType& getTypeRef();
         size_t getHeight() const;
         int getBalance() const;
         size_t recalculateHeight();
