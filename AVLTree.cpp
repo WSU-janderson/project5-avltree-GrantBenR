@@ -135,6 +135,14 @@ size_t AVLTree::getHeight() const
 
 }
 
+AVLNode*& AVLTree::getRoot()
+{
+    return this->root;
+}
+AVLNode*& AVLTree::getRoot() const
+{
+    return this->root;
+}
 /**
  *
  * @param other
@@ -159,12 +167,93 @@ AVLTree& AVLTree::operator=(const AVLTree& other)
  */
 AVLTree::~AVLTree()
 {
-
+    bool didDestroy = this->recursiveDestroyNode(this->getRoot());
 }
-
+bool AVLTree::recursiveDestroyNode(AVLNode* node_to_destroy)
+{
+    if (!node_to_destroy->isLeaf())
+    {
+        AVLNode* left = node_to_destroy->getLeft();
+        if (left != nullptr)
+        {
+            this->recursiveDestroyNode(left);
+        }
+        AVLNode* right = node_to_destroy->getRight();
+        if (right != nullptr)
+        {
+            this->recursiveDestroyNode(right);
+        }
+        delete node_to_destroy;
+        return true;
+    }
+    else
+    {
+        delete node_to_destroy;
+        return false;
+    }
+}
 std::ostream& operator<<(ostream& os, const AVLTree & avlTree)
 {
+    AVLNode* rightmost_node = avlTree.getRightMostNode();
+
     return os;
+}
+AVLNode*& AVLTree::getRightMostNode()
+{
+    AVLNode*& rightmost_node = this->getRoot();
+    while (rightmost_node->getRight() != nullptr)
+    {
+        rightmost_node = rightmost_node->getRightRef();
+    }
+    return rightmost_node;
+}
+
+std::vector<AVLNode*&> AVLTree::getNodesRightFirst()
+{
+    AVLNode*& rightmost_node = this->getRightMostNode();
+    std::vector<AVLNode*&>* nodes = new std::vector<AVLNode*&>();
+    nodes = this->getNodesRightFirstRecursion(rightmost_node, nodes);
+    return nodes;
+}
+std::vector<AVLNode*&> AVLTree::getNodesRightFirstRecursion(AVLNode* current, std::vector<AVLNode*&>* nodes)
+{
+    if (!current->isLeaf())
+    {
+        AVLNode* right = current->getRight();
+        if (right != nullptr)
+        {
+            nodes->push_back(right);
+            this->getNodesRightFirstRecursion(current, nodes);
+        }
+        AVLNode* left = current->getLeft();
+        if (left != nullptr)
+        {
+            this->getNodesRightFirstRecursion(current, nodes);
+        }
+    }
+    return nodes;
+}
+
+bool AVLTree::recursivePrintNode(AVLNode* current)
+{
+    if (!current->isLeaf())
+    {
+        AVLNode* left = current->getLeft();
+        if (left != nullptr)
+        {
+            this->recursivePrintNode(left);
+        }
+        AVLNode* right = current->getRight();
+        if (right != nullptr)
+        {
+            this->recursivePrintNode(right);
+        }
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /**
@@ -172,7 +261,8 @@ std::ostream& operator<<(ostream& os, const AVLTree & avlTree)
  * @param current
  * @return
  */
-bool AVLTree::removeNode(AVLNode*& current){
+bool AVLTree::removeNode(AVLNode*& current)
+{
     if (!current) {
         return false;
     }
@@ -201,7 +291,7 @@ bool AVLTree::removeNode(AVLNode*& current){
         }
         const std::string newKey = smallestInRight->getKey();
         const int newValue = static_cast<int>(smallestInRight->getValue());
-        remove(root, smallestInRight->getKey()); // delete this one
+        remove(this->getRoot(), smallestInRight->getKey()); // delete this one
 
         current->setKey(newKey);
         current->setValue(newValue);

@@ -27,7 +27,7 @@ AVLNode::AVLNode() : value(0), height(0), left(nullptr), right(nullptr)
  */
 AVLNode::AVLNode(std::string key,size_t node_value, AVLNode* left_value, AVLNode* right_value) : key(std::move(key)), value(node_value), left(left_value), right(right_value)
 {
- this->setHeight(this->getHeight());
+    this->height = recalculateHeight();
 }
 /**
  *
@@ -49,6 +49,15 @@ AVLNode* AVLNode::getLeft() const
 
 /**
  *
+ * @return
+ */
+AVLNode*& AVLNode::getLeftRef()
+{
+    return left;
+}
+
+/**
+ *
  * @param right_value
  */
 void AVLNode::setRight(AVLNode* right_value)
@@ -64,7 +73,14 @@ AVLNode* AVLNode::getRight() const
 {
     return right;
 }
-
+/**
+ *
+ * @return
+ */
+AVLNode*& AVLNode::getRightRef()
+{
+    return right;
+}
 /**
  *
  * @param key_value
@@ -82,7 +98,14 @@ std::string AVLNode::getKey() const
 {
     return key;
 }
-
+/**
+ *
+ * @return
+ */
+std::string& AVLNode::getKeyRef()
+{
+    return key;
+}
 /**
  *
  * @param new_value
@@ -97,6 +120,15 @@ void AVLNode::setValue(const size_t new_value)
  * @return
  */
 size_t AVLNode::getValue() const
+{
+    return this->value;
+}
+
+/**
+ *
+ * @return
+ */
+size_t& AVLNode::getValueRef()
 {
     return this->value;
 }
@@ -164,14 +196,13 @@ size_t AVLNode::recalculateHeight()
 {
     AVLNode* current = this;
     size_t total_height = 0;
-    size_t left_height = 0;
-    size_t right_height = 0;
     if (!current->isLeaf())
     {
         AVLNode* left_ptr = current->getLeft();
         AVLNode* right_ptr = current->getRight();
         if (left_ptr)
         {
+            size_t left_height = 0;
             left_height = left_ptr->recalculateHeight();
             if (left_height > total_height)
             {
@@ -180,6 +211,7 @@ size_t AVLNode::recalculateHeight()
         }
         if (right_ptr)
         {
+            size_t right_height = 0;
             right_height = right_ptr->recalculateHeight();
             if (right_height > total_height)
             {
