@@ -264,6 +264,7 @@ bool AVLNode::isRoot() const
 }
 
 /**
+ *
  * Is node of type LEFT
  *
  * Average Case Complexity: O(1)
@@ -285,6 +286,11 @@ bool AVLNode::isLeft() const
 
 /**
  *
+ * Is node of type RIGHT
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 bool AVLNode::isRight() const
@@ -301,6 +307,11 @@ bool AVLNode::isRight() const
 
 /**
  *
+ * Setter for type
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @param new_type
  */
 void AVLNode::setType(NodeType new_type)
@@ -309,6 +320,11 @@ void AVLNode::setType(NodeType new_type)
 }
 
 /**
+ *
+ * Getter for type const
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @return
  */
@@ -319,6 +335,11 @@ NodeType AVLNode::getType() const
 
 /**
  *
+ * Getter for type ref
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 NodeType& AVLNode::getTypeRef()
@@ -327,6 +348,11 @@ NodeType& AVLNode::getTypeRef()
 }
 
 /**
+ *
+ * Getter for height const
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @return
  */
@@ -337,6 +363,11 @@ size_t AVLNode::getHeight() const
 
 /**
  *
+ * Calculates balance based on left and right nodes
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 int AVLNode::getBalance() const
@@ -345,7 +376,7 @@ int AVLNode::getBalance() const
     AVLNode* left_node = this->getLeft();
     if (left_node != nullptr)
     {
-        balance += static_cast<int>(left_node->getHeight());
+        balance += static_cast<int>(left_node->getHeight()); // O(1)
     }
     else
     {
@@ -354,16 +385,21 @@ int AVLNode::getBalance() const
     AVLNode* right_node = this->getRight();
     if (right_node != nullptr)
     {
-        balance -= static_cast<int>(right_node->getHeight());
+        balance -= static_cast<int>(right_node->getHeight()); // O(1)
     }
     else
     {
-        balance = balance + 1;
+        balance = balance + 1; // O(1)
     }
     return balance;
 }
 
 /**
+ *
+ * Recalculates height of cell and sets it
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @return
  */
@@ -399,6 +435,11 @@ size_t AVLNode::recalculateHeight()
 }
 
 /**
+ *
+ * ostream operator for node
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @param os
  * @param avlNode
