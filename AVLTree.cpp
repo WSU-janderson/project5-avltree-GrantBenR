@@ -53,37 +53,24 @@ size_t AVLTree::getIndex(const AVLNode* node) const
  */
 bool AVLTree::insert(const std::string& key, size_t value)
 {
-    size_t new_index = this->hash(key);
-    AVLNode*& current = this->getRoot();
-    if (current != nullptr)
+    AVLNode*& node = this->getNode(key);
+    if (node == nullptr)
     {
-        size_t existing_index = 0;
-        while (current != nullptr)
+        node = new AVLNode(key, value, nullptr, nullptr);
+        node->recalculateHeight();
+        if (this->getRoot() == nullptr)
         {
-            existing_index = this->getIndex(current);
-            if (new_index < existing_index)
-            {
-                current = current->getLeftRef();
-            }
-            else if (new_index > existing_index)
-            {
-                current = current->getRightRef();
-            }
-            else
-            {
-                return false;
-            }
+            this->setRoot(node);
         }
-        current = new AVLNode(key, value, nullptr, nullptr);
-        current->recalculateHeight();
-        this->balanceNode(this->getRoot());
+        else
+        {
+            this->balanceNode(this->getRoot());
+        }
         return true;
     }
     else
     {
-        // If the BST is empty and there is no root
-        this->root = new AVLNode(key, value, nullptr, nullptr);
-        return true;
+        return false;
     }
 }
 
@@ -100,8 +87,17 @@ bool AVLTree::insert(const std::string& key, size_t value)
  */
 bool AVLTree::remove(AVLNode *&current, KeyType key)
 {
-
-    return false;
+    AVLNode*& node = this->getNode(key);
+    if (node != nullptr)
+    {
+        node->recalculateHeight();
+        this->balanceNode(this->getRoot());
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /**
@@ -113,30 +109,15 @@ bool AVLTree::remove(AVLNode *&current, KeyType key)
  */
 bool AVLTree::contains(const std::string& key) const
 {
-    size_t new_index = this->hash(key);
-    AVLNode*& current = this->getRoot();
-    if (current != nullptr)
+    AVLNode*& node = this->getNode(key);
+    if (node != nullptr)
     {
-        size_t existing_index = 0;
-        while (current != nullptr)
-        {
-            existing_index = this->getIndex(current);
-            if (new_index < existing_index)
-            {
-                current = current->getLeftRef();
-            }
-            else if (new_index > existing_index)
-            {
-                current = current->getRightRef();
-            }
-            else
-            {
-                return true;
-            }
-        }
+        return true;
+    }
+    else
+    {
         return false;
     }
-    return false;
 }
 
 /**
@@ -153,28 +134,10 @@ bool AVLTree::contains(const std::string& key) const
  */
 std::optional<size_t> AVLTree::get(const std::string& key) const
 {
-    size_t new_index = this->hash(key);
-    AVLNode*& current = this->getRoot();
-    if (current != nullptr)
+    AVLNode*& node = this->getNode(key);
+    if (node != nullptr)
     {
-        size_t existing_index = 0;
-        while (current != nullptr)
-        {
-            existing_index = this->getIndex(current);
-            if (new_index < existing_index)
-            {
-                current = current->getLeftRef();
-            }
-            else if (new_index > existing_index)
-            {
-                current = current->getRightRef();
-            }
-            else
-            {
-                return current->getValue();
-            }
-        }
-        return std::nullopt;
+        return node->getValue();
     }
     else
     {
@@ -218,6 +181,36 @@ AVLNode*& AVLTree::getNode(const std::string& key)
     }
 }
 
+AVLNode*& AVLTree::getNode(const std::string& key) const
+{
+    size_t new_index = this->hash(key);
+    AVLNode*& current = this->getRoot();
+    if (current != nullptr)
+    {
+        size_t existing_index = 0;
+        while (current != nullptr)
+        {
+            existing_index = this->getIndex(current);
+            if (new_index < existing_index)
+            {
+                current = current->getLeftRef();
+            }
+            else if (new_index > existing_index)
+            {
+                current = current->getRightRef();
+            }
+            else
+            {
+                return current;
+            }
+        }
+        return current;
+    }
+    else
+    {
+        return current;
+    }
+}
 
 /**
  *
@@ -234,9 +227,17 @@ AVLNode*& AVLTree::getNode(const std::string& key)
  * @param key
  * @return
  */
-std::string& AVLTree::operator[](const size_t& key)
+size_t& AVLTree::operator[](const size_t& key)
 {
-    return std::vector<std::string>();
+    AVLNode*& node = this->getNode(key);
+    if (node != nullptr)
+    {
+        return node->getValueRef();
+    }
+    else
+    {
+        throw std::runtime_error("Operator[]: Table[Key] not found");
+    }
 }
 
 /**
