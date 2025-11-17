@@ -274,7 +274,40 @@ std::vector<std::string> AVLTree::findRangeRecursion(size_t lowIndex, size_t hig
  */
 std::vector<std::string> AVLTree::keys() const
 {
-    return std::vector<std::string>();
+    auto keys_vector = std::vector<std::string>();
+    AVLNode*& root_node = this->getRoot();
+    if (root_node != nullptr)
+    {
+        return keysRecursion(root_node, keys_vector);
+    }
+    else
+    {
+        return keys_vector;
+    }
+}
+
+std::vector<std::string> AVLTree::keysRecursion(const AVLNode* node, std::vector<std::string> keys_vector) const
+{
+    if (!node->isLeaf())
+    {
+        const AVLNode* left = node->getLeft();
+        if (left != nullptr)
+        {
+            keys_vector.emplace_back(left->getKey());
+            keys_vector = this->keysRecursion(left, keys_vector);
+        }
+        const AVLNode* right = node->getRight();
+        if (right != nullptr)
+        {
+            keys_vector.emplace_back(right->getKey());
+            keys_vector = this->keysRecursion(right, keys_vector);
+        }
+        return keys_vector;
+    }
+    else
+    {
+        return keys_vector;
+    }
 }
 
 /**

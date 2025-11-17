@@ -33,6 +33,7 @@ class AVLTree {
         std::vector<std::string> findRange(const std::string& lowKey, const std::string& highKey) const;
         std::vector<std::string> findRangeRecursion(size_t lowIndex, size_t highIndex) const;
         std::vector<std::string> keys() const;
+        std::vector<std::string> keysRecursion(const AVLNode* node, std::vector<std::string> keys_vector) const;
         size_t size() const;
         size_t sizeRecursion(const AVLNode* node, size_t size_counter) const;
         size_t getHeight() const;
