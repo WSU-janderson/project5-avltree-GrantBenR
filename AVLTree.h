@@ -52,7 +52,7 @@ class AVLTree {
         bool remove(AVLNode* root_node, const std::string& key);
         bool contains(const std::string& key) const;
         std::optional<size_t> get(const std::string& key) const;
-        size_t& operator[](const size_t& key);
+        size_t& operator[](const std::string& key);
         std::vector<size_t> findRange(const std::string& lowKey, const std::string& highKey) const;
         std::vector<std::string> keys() const;
         size_t size() const;

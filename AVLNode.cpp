@@ -10,6 +10,9 @@
  *
  * Default Constructor
  *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  */
 AVLNode::AVLNode() : value(0), height(0), left(nullptr), right(nullptr)
 {
@@ -18,18 +21,10 @@ AVLNode::AVLNode() : value(0), height(0), left(nullptr), right(nullptr)
 
 /**
  *
- * Customized Constructor
+ * Setter for left
  *
- * @param key
- * @param node_value
- * @param left_value
- * @param right_value
- */
-AVLNode::AVLNode(std::string key,size_t node_value, AVLNode* left_value, AVLNode* right_value) : key(std::move(key)), value(node_value), left(left_value), right(right_value)
-{
-    this->height = recalculateHeight();
-}
-/**
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @param left_value
  */
@@ -40,6 +35,11 @@ void AVLNode::setLeft(AVLNode* left_value)
 
 /**
  *
+ * Getter for left const
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 AVLNode* AVLNode::getLeft() const
@@ -48,6 +48,11 @@ AVLNode* AVLNode::getLeft() const
 }
 
 /**
+ *
+ * Getter for left ref
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @return
  */
@@ -58,6 +63,11 @@ AVLNode*& AVLNode::getLeftRef()
 
 /**
  *
+ * Setter for right
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @param right_value
  */
 void AVLNode::setRight(AVLNode* right_value)
@@ -67,6 +77,11 @@ void AVLNode::setRight(AVLNode* right_value)
 
 /**
  *
+ * Getter for right const
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 AVLNode* AVLNode::getRight() const
@@ -75,6 +90,11 @@ AVLNode* AVLNode::getRight() const
 }
 /**
  *
+ * Getter for right ref
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 AVLNode*& AVLNode::getRightRef()
@@ -82,6 +102,11 @@ AVLNode*& AVLNode::getRightRef()
     return right;
 }
 /**
+ *
+ * Setter for key
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @param key_value
  */
@@ -92,6 +117,11 @@ void AVLNode::setKey(std::string key_value)
 
 /**
  *
+ * Getter for key const
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 std::string AVLNode::getKey() const
@@ -100,6 +130,11 @@ std::string AVLNode::getKey() const
 }
 /**
  *
+ * Getter for key ref
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 std::string& AVLNode::getKeyRef()
@@ -107,6 +142,11 @@ std::string& AVLNode::getKeyRef()
     return key;
 }
 /**
+ *
+ * Setter for value
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @param new_value
  */
@@ -117,6 +157,11 @@ void AVLNode::setValue(const size_t new_value)
 
 /**
  *
+ * Getter for value const
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 size_t AVLNode::getValue() const
@@ -125,6 +170,11 @@ size_t AVLNode::getValue() const
 }
 
 /**
+ *
+ * Getter for value ref
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @return
  */
@@ -135,6 +185,11 @@ size_t& AVLNode::getValueRef()
 
 /**
  *
+ * Setter for node height
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @param height_value
  */
 void AVLNode::setHeight(const size_t height_value)
@@ -144,16 +199,21 @@ void AVLNode::setHeight(const size_t height_value)
 
 /**
  *
+ * Gets number of direct children of a node between 0 and 2
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 size_t AVLNode::numChildren() const
 {
     size_t num_children = 0;
-    if (getRight())
+    if (getRight()) // O(1)
     {
         num_children += 1;
     }
-    if (getLeft())
+    if (getLeft()) // O(1)
     {
         num_children += 1;
     }
@@ -164,11 +224,14 @@ size_t AVLNode::numChildren() const
  *
  * If the Node has no left or right value it is a leaf on the BST
  *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @return
  */
 bool AVLNode::isLeaf() const
 {
-    if (getLeft() && getRight())
+    if (getLeft() && getRight()) // O(1)
     {
         return true;
     }
@@ -180,6 +243,11 @@ bool AVLNode::isLeaf() const
 }
 
 /**
+ *
+ * Is node of type ROOT
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @return
  */
@@ -196,6 +264,10 @@ bool AVLNode::isRoot() const
 }
 
 /**
+ * Is node of type LEFT
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @return
  */

@@ -17,10 +17,15 @@ const std::hash<std::string> AVLTree::hasher = std::hash<std::string>{};
  */
 size_t AVLTree::hash(const std::string& str) const
 {
-    return hasher(str);
+    return hasher(str); // O(1)
 }
 
 /**
+ *
+ * Gets hashed index value for string
+ *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
  *
  * @param node
  * @return
@@ -32,12 +37,17 @@ size_t AVLTree::getIndex(AVLNode* node)
 
 /**
  *
+ * Gets const hashed index value for string
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  * @param node
  * @return
  */
 size_t AVLTree::getIndex(const AVLNode* node) const
 {
-    return hash(node->getKey());
+    return hash(node->getKey()); // O(1)
 }
 
 /**
@@ -47,8 +57,8 @@ size_t AVLTree::getIndex(const AVLNode* node) const
  * successful, false otherwise. If the insertion was unsuccessful, such as when a duplicate is
  * attempted to be inserted, the method should return false.
  *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
  *
  * @param key
  * @param value
@@ -84,6 +94,9 @@ bool AVLTree::insert(const std::string& key, size_t value)
  * rebalanced if necessary. If the key was removed from the tree, remove() returns true, if the key
  * was not in the tree, remove() returns false.
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param root_node
  * @param key
  * @return
@@ -95,6 +108,11 @@ bool AVLTree::remove(AVLNode* root_node, const std::string& key)
 }
 
 /**
+ *
+ *
+ *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
  *
  * @param current
  * @return
@@ -146,12 +164,15 @@ bool AVLTree::removeNode(AVLNode*& current)
  *
  * The contains() method returns true if the key is in the tree and false if the key is not in the tree.
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param key
  * @return
  */
 bool AVLTree::contains(const std::string& key) const
 {
-    AVLNode*& node = this->getNode(key);
+    AVLNode*& node = this->getNode(key); // O(logN)
     if (node != nullptr)
     {
         return true;
@@ -171,6 +192,9 @@ bool AVLTree::contains(const std::string& key) const
  * signify the return value is invalid. It’s also much better than throwing an exception if the key is
  * not found.
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param key
  * @return
  */
@@ -188,6 +212,11 @@ std::optional<size_t> AVLTree::get(const std::string& key) const
 }
 
 /**
+ *
+ * Get node with key in the AVL tree. If found returns
+ *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
  *
  * @param key
  * @return
@@ -224,7 +253,7 @@ AVLNode*& AVLTree::getNode(const std::string& key)
 }
 
 /**
- * Get node with key in the AVL tree. If found returns
+ * Get node with key in the AVL tree. If found returns const
  *
  * Average Case Complexity: O(logN)
  * Worst Case Complexity: O(logN)
@@ -235,20 +264,20 @@ AVLNode*& AVLTree::getNode(const std::string& key)
 AVLNode*& AVLTree::getNode(const std::string& key) const
 {
     size_t new_index = this->hash(key);
-    AVLNode*& current = this->getRoot();
+    AVLNode*& current = this->getRoot(); // O(1)
     if (current != nullptr)
     {
         size_t existing_index = 0;
-        while (current != nullptr)
+        while (current != nullptr) // O(logN)
         {
             existing_index = this->getIndex(current); // O(1)
             if (new_index < existing_index)
             {
-                current = current->getLeftRef();
+                current = current->getLeftRef(); // O(1)
             }
             else if (new_index > existing_index)
             {
-                current = current->getRightRef();
+                current = current->getRightRef(); // O(1)
             }
             else
             {
@@ -275,15 +304,18 @@ AVLNode*& AVLTree::getNode(const std::string& key) const
  * avlTree[“James”] = 1234;
  * You do not need to handle missing/invalid keys inside operator[].
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param key
  * @return
  */
-size_t& AVLTree::operator[](const size_t& key)
+size_t& AVLTree::operator[](const std::string& key)
 {
-    AVLNode*& node = this->getNode(key);
+    AVLNode*& node = this->getNode(key); // O(logN)
     if (node != nullptr)
     {
-        return node->getValueRef();
+        return node->getValueRef(); // O(1)
     }
     else
     {

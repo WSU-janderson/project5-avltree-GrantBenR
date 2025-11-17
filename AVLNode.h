@@ -19,7 +19,6 @@ class AVLNode
         NodeType nodeType;
     public:
         AVLNode();
-        AVLNode(std::string key, size_t node_value, AVLNode* left_value, AVLNode* right_value);
         void setLeft(AVLNode* left_value);
         AVLNode* getLeft() const;
         AVLNode*& getLeftRef();
