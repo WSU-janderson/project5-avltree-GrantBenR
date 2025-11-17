@@ -253,7 +253,16 @@ size_t& AVLTree::operator[](const size_t& key)
  */
 std::vector<std::string> AVLTree::findRange( const std::string& lowKey,const std::string& highKey) const
 {
-    return std::vector<std::string>();
+    auto range_vector = std::vector<std::string>();
+    size_t low_index = this->hash(lowKey);
+    size_t high_index = this->hash(highKey);
+    range_vector = this->findRangeRecursion(low_index, high_index);
+    return range_vector;
+}
+
+std::vector<std::string> AVLTree::findRangeRecursion(size_t lowIndex, size_t highIndex) const
+{
+
 }
 
 /**
