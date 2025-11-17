@@ -285,9 +285,40 @@ std::vector<std::string> AVLTree::keys() const
  */
 size_t AVLTree::size() const
 {
-
+    AVLNode*& root_node = this->getRoot();
+    if (root_node != nullptr)
+    {
+        return sizeRecursion(root_node, 0);
+    }
+    else
+    {
+        return 0;
+    }
 }
 
+size_t AVLTree::sizeRecursion(const AVLNode* node, size_t size_counter) const
+{
+    if (!node->isLeaf())
+    {
+        const AVLNode* left = node->getLeft();
+        if (left != nullptr)
+        {
+            size_counter += 1;
+            size_counter = this->sizeRecursion(left, size_counter);
+        }
+        const AVLNode* right = node->getRight();
+        if (right != nullptr)
+        {
+            size_counter += 1;
+            size_counter = this->sizeRecursion(right, size_counter);
+        }
+        return size_counter;
+    }
+    else
+    {
+        return size_counter;
+    }
+}
 /**
  *
  * The getHeight() method will return the height of the AVL tree.
