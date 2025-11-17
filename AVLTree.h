@@ -15,10 +15,11 @@ using namespace std;
 class AVLTree {
     private:
         AVLNode *&root;
+        size_t height;
         static const std::hash<std::string> hasher;
         void setRoot(AVLNode*& new_root);
         std::vector<AVLNode*>*& getNodesRightFirstRecursion(AVLNode* current, std::vector<AVLNode*>*& nodes);
-        std::vector<std::string> findRangeRecursion(size_t lowIndex, size_t highIndex) const;
+        std::vector<size_t> findRangeRecursion(AVLNode* node, std::vector<size_t> vals, size_t lowIndex, size_t highIndex) const;
         size_t sizeRecursion(const AVLNode* node, size_t size_counter) const;
         std::vector<std::string> keysRecursion(const AVLNode* node, std::vector<std::string> keys_vector) const;
         AVLNode*& getNode(const std::string& key);
@@ -52,7 +53,7 @@ class AVLTree {
         bool contains(const std::string& key) const;
         std::optional<size_t> get(const std::string& key) const;
         size_t& operator[](const size_t& key);
-        std::vector<std::string> findRange(const std::string& lowKey, const std::string& highKey) const;
+        std::vector<size_t> findRange(const std::string& lowKey, const std::string& highKey) const;
         std::vector<std::string> keys() const;
         size_t size() const;
         size_t getHeight() const;
