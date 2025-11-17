@@ -31,6 +31,7 @@ class AVLTree {
         std::vector<std::string> keysRecursion(const AVLNode* node, std::vector<std::string> keys_vector) const;
         AVLNode*& getNode(const std::string& key);
         AVLNode*& getNode(const std::string& key) const;
+
         AVLNode*& getRightMostNode(AVLNode*& node);
         AVLNode*& getLeftMostNodeConst(AVLNode*& node) const;
         AVLNode*& getLeftMostNode(AVLNode*& node);
@@ -56,7 +57,7 @@ class AVLTree {
     public:
         using KeyType = std::string;
         using ValueType = size_t;
-        bool remove(AVLNode* root_node, const std::string& key);
+        bool remove(const std::string& key);
         bool contains(const std::string& key) const;
         std::optional<size_t> get(const std::string& key) const;
         size_t& operator[](const std::string& key);
@@ -73,7 +74,7 @@ class AVLTree {
         size_t getIndex(AVLNode* node);
         size_t getIndex(const AVLNode* node) const;
         bool insert(const std::string& key, size_t value);
-        bool recursivePrintNode(AVLNode* current);
+        bool recursivePrintNode(ostream& os, AVLNode* current, size_t depth) const;
         friend std::ostream& operator<<(ostream& os, const AVLTree & avlTree);
 };
 

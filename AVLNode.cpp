@@ -455,6 +455,15 @@ size_t AVLNode::recalculateHeight()
  */
 std::ostream& operator<<(std::ostream& os, const AVLNode& avlNode)
 {
-    os << "{\"" << avlNode.getKey() << "\": " << avlNode.getValue() << "}" << std::endl;
+    if (avlNode != nullptr)
+    {
+        std::string key = avlNode.getKey();
+        size_t value = avlNode.getValue();
+        os << "{" << key << ": " << value << "}";
+    }
+    else
+    {
+        os << "{NULL}";
+    }
     return os;
 }

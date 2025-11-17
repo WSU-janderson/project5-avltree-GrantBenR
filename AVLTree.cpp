@@ -12,6 +12,7 @@
 #include "AVLTree.h"
 
 #include <optional>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -108,18 +109,23 @@ bool AVLTree::insert(const std::string& key, size_t value)
  * Average Case Complexity: O(logN)
  * Worst Case Complexity: O(logN)
  *
- * @param root_node
  * @param key
  * @return
  */
-bool AVLTree::remove(AVLNode* root_node, const std::string& key)
+bool AVLTree::remove(const std::string& key)
 {
     AVLNode*& node_to_delete = this->getNode(key);
-    return true;
+    if (node_to_delete != nullptr)
+    {
+        removeNode(node_to_delete);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /**
- *
  *
  *
  * Average Case Complexity: O(logN)
@@ -136,29 +142,32 @@ bool AVLTree::removeNode(AVLNode*& current)
 
     AVLNode* toDelete = current;
     auto nChildren = current->numChildren();
-    if (current->isLeaf()) {
+    if (current->isLeaf())
+    {
         // case 1 we can deletes the node
         current = nullptr;
-    } else if (current->numChildren() == 1) {
+    }
+    else if (current->numChildren() == 1)
+    {
         // case 2 - replace current with its only child
-        if (current->getRight()) {
+        if (current->getRight())
+        {
             current = current->getRight();
-        } else {
+        }
+        else
+        {
             current = current->getLeft();
         }
-    } else {
+    }
+    else
+    {
         // case 3 - we have two children,
         // get smallest key in right subtree by
         // getting right child and go left until left is null
-        AVLNode* smallestInRight = current->getRight();
-        // I could check if smallestInRight is null,
-        // but it shouldn't be since the node has two children
-        while (smallestInRight->getLeft()) {
-            smallestInRight = smallestInRight->getLeft();
-        }
+        AVLNode* smallestInRight = this->getLeftMostNode(current->getRightRef());
         const std::string newKey = smallestInRight->getKey();
         const int newValue = static_cast<int>(smallestInRight->getValue());
-        remove(this->getRoot(), smallestInRight->getKey()); // delete this one
+        removeNode(smallestInRight); // delete this one
 
         current->setKey(newKey);
         current->setValue(newValue);
@@ -167,7 +176,6 @@ bool AVLTree::removeNode(AVLNode*& current)
         return true; // we already deleted the one we needed to so return
     }
     delete toDelete;
-
     return true;
 }
 
@@ -674,8 +682,55 @@ bool AVLTree::recursiveDestroyNode(AVLNode* node_to_destroy)
  */
 std::ostream& operator<<(ostream& os, const AVLTree& avlTree)
 {
+    AVLNode*& root_node = avlTree.getRoot();
+    avlTree.recursivePrintNode(os, root_node, 0);
     return os;
 }
+
+/**
+ *
+ * Print all nodes in the tree from right to left
+ *
+ * Average Case Complexity: O(N)
+ * Worst Case Complexity: O(N)
+ *
+ * @param os
+ * @param current
+ * @return
+ */
+bool AVLTree::recursivePrintNode(ostream& os, AVLNode* current, size_t depth) const
+{
+    if (!current->isLeaf())
+    {
+        AVLNode* right = current->getRight(); // O(1)
+        if (right != nullptr)
+        {
+            this->recursivePrintNode(os, right, depth + 1); // O(N)
+            for (size_t i = 0; i < depth; i++) // worst (O(N)
+            {
+                os << "\t"; // Print tabs to signify depth
+            }
+            os << right << std::endl; // O(1)
+
+        }
+        AVLNode* left = current->getLeft(); // O(1)
+        if (left != nullptr)
+        {
+            this->recursivePrintNode(os, left, depth + 1); // O(N)
+            for (size_t i = 0; i < depth; i++) // worst O(N)
+            {
+                os << "\t";
+            }
+            os << left << std::endl; // O(1)
+        }
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 /**
  *
  * Gets rightmost node in the tree
@@ -773,38 +828,6 @@ std::vector<AVLNode*>*& AVLTree::getNodesRightFirstRecursion(AVLNode* current, s
         }
     }
     return nodes;
-}
-
-/**
- *
- * Print all nodes in the tree from right to left
- *
- * Average Case Complexity: O(N)
- * Worst Case Complexity: O(N)
- *
- * @param current
- * @return
- */
-bool AVLTree::recursivePrintNode(AVLNode* current)
-{
-    if (!current->isLeaf())
-    {
-        AVLNode* right = current->getRight();
-        if (right != nullptr)
-        {
-            this->recursivePrintNode(right);
-        }
-        AVLNode* left = current->getLeft();
-        if (left != nullptr)
-        {
-            this->recursivePrintNode(left);
-        }
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 /**
