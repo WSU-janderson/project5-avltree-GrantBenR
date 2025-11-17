@@ -1,5 +1,12 @@
 /**
- * AVLTree.h
+ * AVLTree.cpp
+ *
+ * Author: Grant Rynders
+ * Class: CS3100
+ * Professor: James Anderson
+ * Assignment: Project 5
+ * Date Created 11/5/25
+ *
  */
 
 #ifndef AVLTREE_H
