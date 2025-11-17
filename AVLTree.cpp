@@ -296,7 +296,27 @@ size_t AVLTree::size() const
  */
 size_t AVLTree::getHeight() const
 {
-
+    AVLNode*& root_node = this->getRoot();
+    AVLNode*& rightmost_node = this->getRightMostNodeConst(root_node);
+    size_t right_height = 0;
+    if (rightmost_node != nullptr)
+    {
+        right_height = rightmost_node->getHeight();
+    }
+    AVLNode*& leftmost_node = this->getLeftMostNodeConst(root_node);
+    size_t left_height = 0;
+    if (leftmost_node != nullptr)
+    {
+        left_height = leftmost_node->getHeight();
+    }
+    if (left_height > right_height)
+    {
+        return left_height;
+    }
+    else
+    {
+        return right_height;
+    }
 }
 
 AVLNode*& AVLTree::getRoot()
@@ -414,6 +434,32 @@ AVLNode*& AVLTree::getRightMostNode(AVLNode*& node)
  * @return
  */
 AVLNode*& AVLTree::getLeftMostNode(AVLNode*& node)
+{
+    AVLNode*& leftmost_node = node;
+    while (leftmost_node->getLeft() != nullptr)
+    {
+        leftmost_node = leftmost_node->getLeftRef();
+    }
+    return leftmost_node;
+}
+/**
+ *
+ * @return
+ */
+AVLNode*& AVLTree::getRightMostNodeConst(AVLNode*& node) const
+{
+    AVLNode*& rightmost_node = node;
+    while (rightmost_node->getRight() != nullptr)
+    {
+        rightmost_node = rightmost_node->getRightRef();
+    }
+    return rightmost_node;
+}
+/**
+ *
+ * @return
+ */
+AVLNode*& AVLTree::getLeftMostNodeConst(AVLNode*& node) const
 {
     AVLNode*& leftmost_node = node;
     while (leftmost_node->getLeft() != nullptr)
