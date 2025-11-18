@@ -21,18 +21,19 @@ using namespace std;
 class AVLTree {
     private:
         // PRIVATE VARIABLES
-        AVLNode *&root;
-        size_t height{};
+        AVLNode* root;
+        size_t height;
         static const std::hash<std::string> hasher;
         // PRIVATE SETTERS
         void setRoot(AVLNode*& new_root);
         // RECURSION FOR UTILITY FUNCTIONS
+        void equalsRecursive(const AVLNode* other_node, AVLNode*& new_node);
         std::vector<size_t> findRangeRecursion(AVLNode* node, std::vector<size_t> vals, size_t lowIndex, size_t highIndex) const;
         size_t sizeRecursion(const AVLNode* node, size_t size_counter) const;
         std::vector<std::string> keysRecursion(const AVLNode* node, std::vector<std::string> keys_vector) const;
         // GET NODE
         AVLNode*& getNode(const std::string& key);
-        AVLNode*& getNode(const std::string& key) const;
+        AVLNode* getNode(const std::string& key) const;
         // GET FURTHEST NODES
         AVLNode*& getRightMostNode(AVLNode*& node);
         AVLNode*& getLeftMostNodeConst(AVLNode*& node) const;
@@ -69,8 +70,9 @@ class AVLTree {
         std::vector<std::string> keys() const;
         size_t size() const;
         size_t getHeight() const;
+        void setHeight(size_t height_value);
         AVLNode*& getRoot();
-        AVLNode*& getRoot() const;
+        AVLNode* const& getRoot() const;
         // EQUALS AND COPY CONSTRUCTORS
         AVLTree(const AVLTree& other);
         AVLTree& operator=(const AVLTree& other);

@@ -191,7 +191,7 @@ bool AVLTree::removeNode(AVLNode*& current)
  */
 bool AVLTree::contains(const std::string& key) const
 {
-    AVLNode*& node = this->getNode(key); // O(logN)
+    AVLNode* node = this->getNode(key); // O(logN)
     if (node != nullptr)
     {
         return true;
@@ -219,7 +219,7 @@ bool AVLTree::contains(const std::string& key) const
  */
 std::optional<size_t> AVLTree::get(const std::string& key) const
 {
-    AVLNode*& node = this->getNode(key);
+    AVLNode* node = this->getNode(key);
     if (node != nullptr)
     {
         return node->getValue();
@@ -280,10 +280,11 @@ AVLNode*& AVLTree::getNode(const std::string& key)
  * @param key
  * @return
  */
-AVLNode*& AVLTree::getNode(const std::string& key) const
+AVLNode* AVLTree::getNode(const std::string& key) const
 {
     size_t new_index = this->hash(key);
-    AVLNode*& current = this->getRoot(); // O(1)
+    AVLNode* current = this->getRoot(); // O(1)
+
     if (current != nullptr)
     {
         size_t existing_index = 0;
@@ -396,7 +397,7 @@ std::vector<size_t> AVLTree::findRangeRecursion(AVLNode* node, std::vector<size_
 std::vector<std::string> AVLTree::keys() const
 {
     auto keys_vector = std::vector<std::string>();
-    AVLNode*& root_node = this->getRoot();
+    AVLNode* root_node = this->getRoot();
     if (root_node != nullptr)
     {
         return keysRecursion(root_node, keys_vector); // O(N)
@@ -453,7 +454,7 @@ std::vector<std::string> AVLTree::keysRecursion(const AVLNode* node, std::vector
  */
 size_t AVLTree::size() const
 {
-    AVLNode*& root_node = this->getRoot();
+    AVLNode* root_node = this->getRoot();
     if (root_node != nullptr)
     {
         return sizeRecursion(root_node, 0); // O(N)
@@ -515,6 +516,21 @@ size_t AVLTree::getHeight() const
 
 /**
  *
+ * Setter for height
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
+ * @return
+ */
+void AVLTree::setHeight(size_t height_value)
+{
+    // height of the tree every time it is inserted into
+    this->height = height_value;
+}
+
+/**
+ *
  * Getter for root, non-const
  *
  * Average Case Complexity: O(1)
@@ -535,7 +551,7 @@ AVLNode*& AVLTree::getRoot()
  *
  * @return
  */
-AVLNode*& AVLTree::getRoot() const
+AVLNode* const& AVLTree::getRoot() const
 {
     return this->root;
 }
@@ -549,7 +565,7 @@ AVLNode*& AVLTree::getRoot() const
  *
  * @param pairs
  */
-// AVLTree::AVLTree(std::vector<std::pair<std::string, size_t>> pairs)
+// AVLTree::AVLTree(std::vector<std::pair<std::string, size_t>> pairs) : root(nullptr), height(0)
 // {
 //     if (!pairs.empty())
 //     {
@@ -576,9 +592,14 @@ AVLNode*& AVLTree::getRoot() const
  *
  * @param other
  */
-AVLTree::AVLTree(const AVLTree& other)
+AVLTree::AVLTree(const AVLTree& other) : root(nullptr)
 {
-
+    AVLNode* other_root = other.getRoot();
+    if (other_root != nullptr)
+    {
+        this->equalsRecursive(other_root, this->getRoot());
+        this->setHeight(other.getHeight());
+    }
 }
 
 /**
@@ -606,8 +627,51 @@ void AVLTree::setRoot(AVLNode*& new_root)
  */
 AVLTree& AVLTree::operator=(const AVLTree& other)
 {
+    AVLNode* other_root = other.getRoot();
+    if (other_root != nullptr)
+    {
+        this->equalsRecursive(other_root, this->getRoot());
+        this->setHeight(other.getHeight());
+        return *this;
+    }
+    else
+    {
+        return *this;
+    }
+}
 
-    return *this;
+/**
+ *
+ * Recursive function for setting two trees equal to one another
+ *
+ * Average Case Complexity: O(N)
+ * Worst Case Complexity: O(N)
+ *
+ * @param other_node
+ * @param new_node
+ */
+void AVLTree::equalsRecursive(const AVLNode* other_node, AVLNode*& new_node)
+{
+    new_node = new AVLNode(other_node->getKey(), other_node->getValue());
+    new_node->setHeight(other_node->getHeight());
+    if (!other_node->isLeaf())
+    {
+        const AVLNode* other_left = other_node->getLeft();
+        if (other_left != nullptr)
+        {
+            this->equalsRecursive(other_left, new_node->getLeftRef()); // O(N)
+        }
+        const AVLNode* other_right = other_node->getRight();
+        if (other_right != nullptr)
+        {
+            this->equalsRecursive(other_right, new_node->getRightRef()); // O(N)
+        }
+        return;
+    }
+    else
+    {
+        return;
+    }
 }
 
 /**
@@ -668,7 +732,7 @@ bool AVLTree::recursiveDestroyNode(AVLNode* node_to_destroy)
  */
 std::ostream& operator<<(ostream& os, const AVLTree& avlTree)
 {
-    AVLNode*& root_node = avlTree.getRoot();
+    AVLNode* root_node = avlTree.getRoot();
     avlTree.recursivePrintNode(os, root_node, 0);
     return os;
 }
@@ -1044,7 +1108,7 @@ void AVLTree::rightLeftRotation(AVLNode *&node)
 /**
  * DEFAULT CONSTRUCTOR
  */
-AVLTree::AVLTree()
+AVLTree::AVLTree() : root(nullptr), height(0)
 {
-    this->root = nullptr;
+
 }
