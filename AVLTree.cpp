@@ -82,7 +82,7 @@ bool AVLTree::insert(const std::string& key, size_t value)
     if (node == nullptr)
     {
         node = new AVLNode(key, value); // O(1)
-        node->recalculateHeight();
+        this->getRoot()->recalculateHeight();
         if (this->getRoot() == nullptr) // O(1)
         {
             this->setRoot(node); // O(1)
@@ -243,32 +243,27 @@ std::optional<size_t> AVLTree::get(const std::string& key) const
 AVLNode*& AVLTree::getNode(const std::string& key)
 {
     size_t new_index = this->hash(key);
-    AVLNode*& current = this->getRoot();
-    if (current != nullptr)
+
+    AVLNode** current = &this->root;
+
+    while (*current != nullptr)
     {
-        size_t existing_index = 0;
-        while (current != nullptr)
+        size_t existing_index = this->getIndex(*current);
+
+        if (new_index < existing_index)
         {
-            existing_index = this->getIndex(current);
-            if (new_index < existing_index)
-            {
-                current = current->getLeftRef();
-            }
-            else if (new_index > existing_index)
-            {
-                current = current->getRightRef();
-            }
-            else
-            {
-                return current;
-            }
+            current = &((*current)->getLeftRef());
         }
-        return current;
+        else if (new_index > existing_index)
+        {
+            current = &((*current)->getRightRef());
+        }
+        else
+        {
+            return *current;
+        }
     }
-    else
-    {
-        return current;
-    }
+    return *current;
 }
 
 /**
@@ -969,32 +964,10 @@ void AVLTree::rightRotate(AVLNode*& y_node)
     AVLNode*& T2_node = x_node->getRightRef(); // O(1)
     AVLNode*& T3_node = y_node->getRightRef(); // O(1)
 
-    x_node->setType(y_node->getType()); // O(1)
     x_node->setRight(y_node); // O(1)
     x_node->setLeft(T1_node); // O(1)
-    if (T1_node != nullptr)
-    {
-        T1_node->setType(NodeType::LEFT); // O(1)
-    }
     y_node->setLeft(T2_node); // O(1)
-    if (T2_node != nullptr)
-    {
-        T2_node->setType(NodeType::LEFT); // O(1)
-    }
     y_node->setRight(T3_node); // O(1)
-    if (T3_node != nullptr)
-    {
-        T3_node->setType(NodeType::RIGHT); // O(1)
-    }
-    y_node->setType(NodeType::RIGHT); // O(1)
-
-
-    x_node->setLeft(T1_node); // O(1)
-    if (T1_node != nullptr)
-    {
-        T1_node->setType(NodeType::LEFT); // O(1)
-    }
-    x_node->setType(y_node->getType()); // O(1)
 
     x_node->recalculateHeight();
     y_node->recalculateHeight();
@@ -1017,25 +990,10 @@ void AVLTree::leftRotate(AVLNode*& x_node)
     AVLNode*& T2_node = y_node->getLeftRef();
     AVLNode*& T3_node = y_node->getRightRef();
 
-    y_node->setType(x_node->getType());
     y_node->setRight(T3_node);
-    if (T3_node != nullptr)
-    {
-        T3_node->setType(NodeType::RIGHT);
-    }
     y_node->setLeft(x_node);
-    x_node->setType(NodeType::LEFT);
-
     x_node->setLeft(T1_node);
-    if (T1_node != nullptr)
-    {
-        T1_node->setType(NodeType::LEFT);
-    }
     x_node->setRight(T2_node);
-    if (T2_node != nullptr)
-    {
-        T2_node->setType(NodeType::RIGHT);
-    }
 
     x_node->recalculateHeight();
     y_node->recalculateHeight();

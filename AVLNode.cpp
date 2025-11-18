@@ -255,111 +255,6 @@ bool AVLNode::isLeaf() const
 
 /**
  *
- * Is node of type ROOT
- *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
- *
- * @return
- */
-bool AVLNode::isRoot() const
-{
-    if (this->nodeType == NodeType::ROOT)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-/**
- *
- * Is node of type LEFT
- *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
- *
- * @return
- */
-bool AVLNode::isLeft() const
-{
-    if (this->nodeType == NodeType::LEFT)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-/**
- *
- * Is node of type RIGHT
- *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
- *
- * @return
- */
-bool AVLNode::isRight() const
-{
-    if (this->nodeType == NodeType::RIGHT)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-/**
- *
- * Setter for type
- *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
- *
- * @param new_type
- */
-void AVLNode::setType(NodeType new_type)
-{
-    this-> nodeType = new_type;
-}
-
-/**
- *
- * Getter for type const
- *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
- *
- * @return
- */
-NodeType AVLNode::getType() const
-{
-    return this->nodeType;
-}
-
-/**
- *
- * Getter for type ref
- *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
- *
- * @return
- */
-NodeType& AVLNode::getTypeRef()
-{
-    return this->nodeType;
-}
-
-/**
- *
  * Getter for height const
  *
  * Average Case Complexity: O(1)
@@ -416,12 +311,12 @@ int AVLNode::getBalance() const
  */
 size_t AVLNode::recalculateHeight()
 {
-    AVLNode* current = this;
+    AVLNode** current = &this;
     size_t total_height = 0;
     if (!current->isLeaf())
     {
-        AVLNode* left_ptr = current->getLeft();
-        AVLNode* right_ptr = current->getRight();
+        AVLNode** left_ptr = &((*current)->getLeftRef());
+        AVLNode** right_ptr = &((*current)->getRightRef());
         if (left_ptr)
         {
             size_t left_height = 0;

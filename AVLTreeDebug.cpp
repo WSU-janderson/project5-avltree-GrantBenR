@@ -18,7 +18,7 @@ int main() {
     bool insertResult;
     std::cout << "INSERTS PART 1: " << std::endl;
     insertResult = tree.insert("F", 'F');
-    insertResult = tree.insert("F", 'F'); // false, no duplicates allowed
+    insertResult = tree.insert("F", 'D'); // false, no duplicates allowed
     insertResult = tree.insert("K", 'K');
     insertResult = tree.insert("X", 'X');// single rotate
     std::cout << std::endl << std::endl;
@@ -111,7 +111,7 @@ int main() {
     std::cout << std::endl << std::endl;
     std::cout << "TREE AFTER REMOVE PART 3: " << std::endl;
     std::cout << tree << std::endl;
-    
+
     std::cout << "TREE REMOVE PART 4: " << std::endl;
     removeResult = tree.remove("V");
     removeResult = tree.remove("X");
