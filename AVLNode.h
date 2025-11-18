@@ -26,6 +26,7 @@ class AVLNode
         NodeType nodeType;
     public:
         AVLNode();
+        AVLNode(std::string  key, size_t value);
         void setLeft(AVLNode* left_value);
         AVLNode* getLeft() const;
         AVLNode*& getLeftRef();
@@ -50,7 +51,7 @@ class AVLNode
         size_t getHeight() const;
         int getBalance() const;
         size_t recalculateHeight();
-        friend std::ostream& operator<<(std::ostream& os, const AVLNode& avlNode);
+        friend std::ostream& operator<<(std::ostream& os, const AVLNode*& avlNode);
 };
 
 

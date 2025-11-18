@@ -81,7 +81,7 @@ bool AVLTree::insert(const std::string& key, size_t value)
     AVLNode*& node = this->getNode(key); // O(logN)
     if (node == nullptr)
     {
-        node = new AVLNode(key, value, nullptr, nullptr); // O(1)
+        node = new AVLNode(key, value); // O(1)
         node->recalculateHeight();
         if (this->getRoot() == nullptr) // O(1)
         {
@@ -539,21 +539,6 @@ AVLNode*& AVLTree::getRoot() const
 {
     return this->root;
 }
-/**
- *
- * Tree constructor with initialized root
- *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
- *
- * @param value
- * @param key
- */
-AVLTree::AVLTree(const std::string& key, size_t value)
-{
-    auto new_root = new AVLNode(key, value, nullptr, nullptr); // O(1)
-    this->root = new_root; // O(1)
-}
 
 /**
  *
@@ -564,24 +549,25 @@ AVLTree::AVLTree(const std::string& key, size_t value)
  *
  * @param pairs
  */
-AVLTree::AVLTree(std::vector<std::pair<std::string, size_t>> pairs)
-{
-    if (!pairs.empty())
-    {
-        std::pair<std::string, size_t> pair = pairs[0];
-        AVLNode* node = new AVLNode(pair.first, pair.second, nullptr, nullptr); // O(1)
-        this->root = node;
-        for (size_t i = 1; i < pairs.size(); i++) // O(N)
-        {
-            pair = pairs[i]; // O(1)
-            this->insert(pair.first, pair.second); // O( )
-        }
-    }
-    else
-    {
-        root = nullptr;
-    }
-}
+// AVLTree::AVLTree(std::vector<std::pair<std::string, size_t>> pairs)
+// {
+//     if (!pairs.empty())
+//     {
+//         std::pair<std::string, size_t> pair = pairs[0];
+//         AVLNode* node = new AVLNode(pair.first, pair.second, nullptr, nullptr); // O(1)
+//         this->root = node;
+//         for (size_t i = 1; i < pairs.size(); i++) // O(N)
+//         {
+//             pair = pairs[i]; // O(1)
+//             this->insert(pair.first, pair.second); // O( )
+//         }
+//     }
+//     else
+//     {
+//         this->root = nullptr;
+//     }
+// }
+
 /**
  *
  * Copy constructor for AVLTree
@@ -802,32 +788,6 @@ AVLNode*& AVLTree::getLeftMostNodeConst(AVLNode*& node) const
         leftmost_node = leftmost_node->getLeftRef();
     }
     return leftmost_node;
-}
-std::vector<AVLNode*>& AVLTree::getNodesRightFirst()
-{
-    AVLNode*& rightmost_node = this->getRightMostNode(this->getRoot());
-    auto nodes = new std::vector<AVLNode*>();
-    nodes = this->getNodesRightFirstRecursion(rightmost_node, nodes);
-    return *nodes;
-}
-std::vector<AVLNode*>*& AVLTree::getNodesRightFirstRecursion(AVLNode* current, std::vector<AVLNode*>*& nodes)
-{
-    if (!current->isLeaf())
-    {
-        AVLNode* right = current->getRight();
-        if (right != nullptr)
-        {
-            nodes->push_back(right);
-            nodes = this->getNodesRightFirstRecursion(current, nodes);
-        }
-        AVLNode* left = current->getLeft();
-        if (left != nullptr)
-        {
-            nodes->push_back(left);
-            nodes = this->getNodesRightFirstRecursion(current, nodes);
-        }
-    }
-    return nodes;
 }
 
 /**
@@ -1079,4 +1039,12 @@ void AVLTree::rightLeftRotation(AVLNode *&node)
     AVLNode* first_rot_node = node->getLeftRef();
     this->leftRotate(first_rot_node);
     this->rightRotate(node);
+}
+
+/**
+ * DEFAULT CONSTRUCTOR
+ */
+AVLTree::AVLTree()
+{
+    this->root = nullptr;
 }

@@ -26,7 +26,10 @@ AVLNode::AVLNode() : value(0), height(0), left(nullptr), right(nullptr)
 {
 
 }
+AVLNode::AVLNode(std::string key, const size_t value) : key(std::move(key)), value(value), height(0), left(nullptr), right(nullptr)
+{
 
+}
 /**
  *
  * Setter for left
@@ -453,12 +456,12 @@ size_t AVLNode::recalculateHeight()
  * @param avlNode
  * @return
  */
-std::ostream& operator<<(std::ostream& os, const AVLNode& avlNode)
+std::ostream& operator<<(std::ostream& os, const AVLNode*& avlNode)
 {
     if (avlNode != nullptr)
     {
-        std::string key = avlNode.getKey();
-        size_t value = avlNode.getValue();
+        std::string key = avlNode->getKey();
+        size_t value = avlNode->getValue();
         os << "{" << key << ": " << value << "}";
     }
     else

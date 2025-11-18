@@ -6,7 +6,7 @@ instead for you to get an idea of how to test the tree
 #include "AVLTree.h"
 #include <iostream>
 #include <string>
-#include <ranges>
+//#include <ranges>
 #include <vector>
 using namespace std;
 
@@ -66,7 +66,7 @@ int main() {
    cout << endl;
 
    // findRange
-   vector<int> rangeTest = tree.findRange("D", "W");
+   vector<size_t> rangeTest = tree.findRange("D", "W");
    // 70 68 82 75 77 86
    for (auto val: rangeTest) {
        cout << val << " ";
