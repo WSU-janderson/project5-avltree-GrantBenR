@@ -704,37 +704,10 @@ AVLNode* const& AVLTree::getRoot() const
 
 /**
  *
- * Tree constructor that accepts vector containing key value pairs of size N
- *
- * Average Case Complexity: O( )
- * Worst Case Complexity: O( )
- *
- * @param pairs
- */
-// AVLTree::AVLTree(std::vector<std::pair<std::string, size_t>> pairs) : root(nullptr), height(0)
-// {
-//     if (!pairs.empty())
-//     {
-//         std::pair<std::string, size_t> pair = pairs[0];
-//         AVLNode* node = new AVLNode(pair.first, pair.second, nullptr, nullptr); // O(1)
-//         this->root = node;
-//         for (size_t i = 1; i < pairs.size(); i++) // O(N)
-//         {
-//             pair = pairs[i]; // O(1)
-//             this->insert(pair.first, pair.second); // O( )
-//         }
-//     }
-//     else
-//     {
-//         this->root = nullptr;
-//     }
-// }
-
-/**
- *
  * Copy constructor for AVLTree
  *
- *
+ * Average Case Complexity: O(N)
+ * Worst Case Complexity: O(N)
  *
  * @param other
  */
@@ -743,7 +716,7 @@ AVLTree::AVLTree(const AVLTree& other) : root(nullptr)
     AVLNode* other_root = other.getRoot();
     if (other_root != nullptr)
     {
-        this->equalsRecursive(other_root, this->getRoot());
+        this->equalsRecursive(other_root, this->getRoot()); // O(N)
     }
 }
 
@@ -876,7 +849,7 @@ bool AVLTree::recursiveDestroyNode(AVLNode* node_to_destroy)
 std::ostream& operator<<(ostream& os, const AVLTree& avlTree)
 {
     AVLNode* root_node = avlTree.getRoot();
-    avlTree.recursivePrintNode(os, root_node, 0);
+    avlTree.recursivePrintNode(os, root_node, 0); // O(N)
     return os;
 }
 
@@ -1002,10 +975,10 @@ AVLNode*& AVLTree::getLeftMostNodeConst(AVLNode*& node) const
 /**
  *
  * If a node is inserted or removed, the tree may need to be rebalanced. Depending on the postion
- * of the unbalanced nodes, different rotatations are required.
+ * of the unbalanced nodes, different rotations are required.
  *
- * Average Case Complexity: O()
- * Worst Case Complexity: O()
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
  *
  * @param node
  */
@@ -1016,11 +989,11 @@ void AVLTree::balanceNode(AVLNode*& node)
 
     if (node_balance > 1) // O(1)
     {
-        this->balanceNodePos(node);
+        this->balanceNodePos(node); // O(logN)
     }
     else if (node_balance < -1) // O(1)
     {
-        this->balanceNodeNeg(node);
+        this->balanceNodeNeg(node); // O(logN)
     }
     else
     {
@@ -1036,12 +1009,12 @@ void AVLTree::balanceNodePos(AVLNode*& node)
         int left_balance = left_node->getBalance(); // O(1)
         if (left_balance > 0)
         {
-            this->leftLeftRotation(node); //
+            this->leftLeftRotation(node); // O(logN)
             return;
         }
         else if (left_node->getBalance() < 0)
         {
-            this->leftRightRotation(node); //
+            this->leftRightRotation(node); // O(logN)
             return;
         }
     }
@@ -1052,18 +1025,27 @@ void AVLTree::balanceNodePos(AVLNode*& node)
 
         if (right_balance < 0)
         {
-            this->rightRightRotation(node); //
+            this->rightRightRotation(node); // O(logN)
             return;
 
         }
         else if (right_balance > 0)
         {
-            this->rightLeftRotation(node); //
+            this->rightLeftRotation(node); // O(logN)
             return;
         }
     }
 }
 
+/**
+ *
+ * Balance node given a negative balance for the parent node
+ *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
+ * @param node
+ */
 void AVLTree::balanceNodeNeg(AVLNode*& node)
 {
     AVLNode* left_node = node->getLeft(); // O(1)
@@ -1072,12 +1054,12 @@ void AVLTree::balanceNodeNeg(AVLNode*& node)
         int left_balance = left_node->getBalance(); // O(1)
         if (left_balance > 0)
         {
-            this->leftLeftRotation(node); //
+            this->leftLeftRotation(node); // O(logN)
             return;
         }
         else if (left_balance < 0)
         {
-            this->leftRightRotation(node); //
+            this->leftRightRotation(node); // O(logN)
             return;
         }
     }
@@ -1088,12 +1070,12 @@ void AVLTree::balanceNodeNeg(AVLNode*& node)
 
         if (right_balance < 0)
         {
-            this->rightRightRotation(node); //
+            this->rightRightRotation(node); // O(logN)
             return;
         }
         else if (right_balance > 0)
         {
-            this->rightLeftRotation(node); //
+            this->rightLeftRotation(node); // O(logN)
             return;
         }
     }
@@ -1107,6 +1089,9 @@ void AVLTree::balanceNodeNeg(AVLNode*& node)
  *       / \                           / \
  *     T1  T2                         T2  T3
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param x_node
  */
 AVLNode* AVLTree::rightRotate(AVLNode*& x_node)
@@ -1117,8 +1102,8 @@ AVLNode* AVLTree::rightRotate(AVLNode*& x_node)
     y_node->setRight(x_node);
     x_node->setLeft(T2_node);
 
-    this->recalculateHeight(x_node);
-    this->recalculateHeight(y_node);
+    this->recalculateHeight(x_node); // O(logN)
+    this->recalculateHeight(y_node); // O(logN)
     return y_node;
 }
 
@@ -1130,6 +1115,9 @@ AVLNode* AVLTree::rightRotate(AVLNode*& x_node)
  *       / \                           / \
  *      T2  T3                        T1  T2
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param x_node
  */
 AVLNode* AVLTree::leftRotate(AVLNode*& x_node)
@@ -1140,8 +1128,8 @@ AVLNode* AVLTree::leftRotate(AVLNode*& x_node)
     y_node->setLeft(x_node);
     x_node->setRight(T2_node);
 
-    this->recalculateHeight(x_node);
-    this->recalculateHeight(y_node);
+    this->recalculateHeight(x_node); // O(logN)
+    this->recalculateHeight(y_node); // O(logN)
     return y_node;
 }
 
@@ -1153,12 +1141,15 @@ AVLNode* AVLTree::leftRotate(AVLNode*& x_node)
  *      /
  *     z
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param y_node
  */
 AVLNode* AVLTree::leftLeftRotation(AVLNode*& y_node)
 {
 
-    y_node = this->rightRotate(y_node);
+    y_node = this->rightRotate(y_node); // O(logN)
     return y_node;
 }
 
@@ -1170,11 +1161,14 @@ AVLNode* AVLTree::leftLeftRotation(AVLNode*& y_node)
  *         \
  *          z
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param x_node
  */
 AVLNode* AVLTree::rightRightRotation(AVLNode*& x_node)
 {
-    x_node = this->leftRotate(x_node);
+    x_node = this->leftRotate(x_node); // O(logN)
     return x_node;
 }
 
@@ -1186,13 +1180,16 @@ AVLNode* AVLTree::rightRightRotation(AVLNode*& x_node)
  *         \                       /                        y   x
  *          z                     y
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param node
  */
 AVLNode* AVLTree::leftRightRotation(AVLNode*& node)
 {
     AVLNode* y_node = node->getLeft();
-    node->setLeft(this->leftRotate(y_node));
-    node = this->rightRotate(node);
+    node->setLeft(this->leftRotate(y_node)); // O(logN)
+    node = this->rightRotate(node); // O(logN)
     return node;
 }
 
@@ -1204,20 +1201,27 @@ AVLNode* AVLTree::leftRightRotation(AVLNode*& node)
  *           /                           \                      y   x
  *          z                             y
  *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
  * @param node
  */
 AVLNode* AVLTree::rightLeftRotation(AVLNode*& node)
 {
     AVLNode* y_node = node->getRightRef();
-    node->setRight(this->leftRotate(y_node));
-    node = this->rightRotate(node);
+    node->setRight(this->leftRotate(y_node)); // O(logN)
+    node = this->rightRotate(node); // O(logN)
     return node;
 }
 
 /**
  * DEFAULT CONSTRUCTOR
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
  */
-AVLTree::AVLTree() : root(nullptr), height(0)
+AVLTree::AVLTree() : root(nullptr)
 {
 
 }
