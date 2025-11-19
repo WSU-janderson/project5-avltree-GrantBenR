@@ -210,6 +210,52 @@ void AVLNode::setHeight(const size_t height_value)
 
 /**
  *
+ * Recalculates height of cell and sets it
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
+ * @return
+ */
+size_t AVLNode::recalculateHeight()
+{
+    return this->recalculateHeightRecursion(0);
+}
+size_t AVLNode::recalculateHeightRecursion(size_t init_height)
+{
+    size_t total_height = 0;
+    if (!(this->isLeaf()))
+    {
+        AVLNode** left_ptr = &(this->getLeftRef());
+        AVLNode** right_ptr = &(this->getRightRef());
+        if (*left_ptr != nullptr)
+        {
+            size_t left_height = 0;
+            (*left_ptr)->setHeight(init_height + 1);
+            left_height = (*left_ptr)->recalculateHeightRecursion(init_height + 1);
+            if (left_height > total_height)
+            {
+                total_height = left_height;
+            }
+        }
+        if (*right_ptr != nullptr)
+        {
+            size_t right_height = 0;
+            (*right_ptr)->setHeight(init_height + 1);
+            right_height = (*right_ptr)->recalculateHeightRecursion(init_height + 1);
+
+            if (right_height > total_height)
+            {
+                total_height = right_height;
+            }
+        }
+    }
+    this->setHeight(total_height);
+    return total_height;
+}
+
+/**
+ *
  * Gets number of direct children of a node between 0 and 2
  *
  * Average Case Complexity: O(1)
@@ -302,46 +348,6 @@ int AVLNode::getBalance() const
 
 /**
  *
- * Recalculates height of cell and sets it
- *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
- *
- * @return
- */
-size_t AVLNode::recalculateHeight()
-{
-    AVLNode** current = &this;
-    size_t total_height = 0;
-    if (!current->isLeaf())
-    {
-        AVLNode** left_ptr = &((*current)->getLeftRef());
-        AVLNode** right_ptr = &((*current)->getRightRef());
-        if (left_ptr)
-        {
-            size_t left_height = 0;
-            left_height = left_ptr->recalculateHeight();
-            if (left_height > total_height)
-            {
-                total_height = left_height;
-            }
-        }
-        if (right_ptr)
-        {
-            size_t right_height = 0;
-            right_height = right_ptr->recalculateHeight();
-            if (right_height > total_height)
-            {
-                total_height = right_height;
-            }
-        }
-    }
-    this->setHeight(total_height);
-    return total_height;
-}
-
-/**
- *
  * ostream operator for node
  *
  * Average Case Complexity: O(1)
@@ -351,7 +357,7 @@ size_t AVLNode::recalculateHeight()
  * @param avlNode
  * @return
  */
-std::ostream& operator<<(std::ostream& os, const AVLNode*& avlNode)
+std::ostream& operator<<(std::ostream& os, const AVLNode* avlNode)
 {
     if (avlNode != nullptr)
     {

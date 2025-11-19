@@ -28,7 +28,7 @@ class AVLTree {
         void setRoot(AVLNode*& new_root);
         // RECURSION FOR UTILITY FUNCTIONS
         void equalsRecursive(const AVLNode* other_node, AVLNode*& new_node);
-        std::vector<size_t> findRangeRecursion(AVLNode* node, std::vector<size_t> vals, size_t lowIndex, size_t highIndex) const;
+        std::vector<size_t> findRangeRecursion(const AVLNode* node, std::vector<size_t> values, size_t lowIndex, size_t highIndex) const;
         size_t sizeRecursion(const AVLNode* node, size_t size_counter) const;
         std::vector<std::string> keysRecursion(const AVLNode* node, std::vector<std::string> keys_vector) const;
         // GET NODE
@@ -84,7 +84,7 @@ class AVLTree {
         size_t getIndex(const AVLNode* node) const;
         // PRINTING
         bool recursivePrintNode(ostream& os, AVLNode* current, size_t depth) const;
-        friend std::ostream& operator<<(ostream& os, const AVLTree & avlTree);
+        friend std::ostream& operator<<(ostream& os, const AVLTree& avlTree);
 };
 
 #endif //AVLTREE_H

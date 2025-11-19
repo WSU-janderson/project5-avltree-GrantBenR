@@ -68,13 +68,13 @@ int main() {
     optional<int> getResult;
     std::cout << "TREE GET PART 1: " << std::endl;
     getResult = tree.get("A"); // 65
-    std::cout << "A: " << getResult.value() << std::endl;
+    std::cout << "{A: " << getResult.value() << "}" << std::endl;
     std::cout << "TREE GET PART 2: " << std::endl;
     getResult = tree.get("C"); // 67
-    std::cout << "C: " << getResult.value() << std::endl;
+    std::cout << "{C: " << getResult.value() << "}" << std::endl;
     std::cout << "TREE GET PART 3: " << std::endl;
     getResult = tree.get("Q"); // getResult has no value
-    std::cout << "Q: " << getResult.has_value() << std::endl; // print 0
+    std::cout << "{Q: " << getResult.has_value() << "}" << std::endl; // print 0
     std::cout << std::endl;
 
     // findRange

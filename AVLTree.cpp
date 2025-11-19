@@ -202,6 +202,8 @@ bool AVLTree::contains(const std::string& key) const
     }
 }
 
+
+
 /**
  *
  * If the key is found in the tree, get() will return the value associated with that key. If the key is not
@@ -364,7 +366,7 @@ std::vector<size_t> AVLTree::findRange( const std::string& lowKey,const std::str
 
 /**
  *
- * Recursively get values in the tree that are within the range of indexs
+ * Recursively get values in the tree that are within the range of indexes
  *
  * Average Case Complexity: O(logN)
  * Worst Case Complexity: O(N)
@@ -374,9 +376,36 @@ std::vector<size_t> AVLTree::findRange( const std::string& lowKey,const std::str
  * @param highIndex
  * @return
  */
-std::vector<size_t> AVLTree::findRangeRecursion(AVLNode* node, std::vector<size_t> nodes, size_t lowIndex, size_t highIndex) const
+std::vector<size_t> AVLTree::findRangeRecursion(const AVLNode* node, std::vector<size_t> values, size_t lowIndex, size_t highIndex) const
 {
-
+    if (!node->isLeaf())
+    {
+        const AVLNode* left = node->getLeft();
+        if (left != nullptr)
+        {
+            size_t left_index = getIndex(left);
+            if ((left_index >= lowIndex) && (left_index <= highIndex))
+            {
+                values.emplace_back(left->getValue()); // O(1)
+            }
+            values = this->findRangeRecursion(left, values, lowIndex, highIndex); // O(N)
+        }
+        const AVLNode* right = node->getRight();
+        if (right != nullptr)
+        {
+            size_t right_index = getIndex(right);
+            if ((right_index >= lowIndex) && (right_index <= highIndex))
+            {
+                values.emplace_back(right->getValue()); // O(1)
+            }
+            values = this->findRangeRecursion(right, values, lowIndex, highIndex); // O(N)
+        }
+        return values;
+    }
+    else
+    {
+        return values;
+    }
 }
 
 /**
@@ -747,31 +776,37 @@ bool AVLTree::recursivePrintNode(ostream& os, AVLNode* current, size_t depth) co
 {
     if (!current->isLeaf())
     {
-        AVLNode* right = current->getRight(); // O(1)
+        AVLNode* right = current->getRightRef(); // O(1)
         if (right != nullptr)
         {
-            this->recursivePrintNode(os, right, depth + 1); // O(N)
-            for (size_t i = 0; i < depth; i++) // worst (O(N)
-            {
-                os << "\t"; // Print tabs to signify depth
-            }
-            os << right << std::endl; // O(1)
-
+            this->recursivePrintNode(os, right, (depth + 1)); // O(N)
         }
-        AVLNode* left = current->getLeft(); // O(1)
+
+        for (size_t i = 0; i < depth; i++) // worst (O(N)
+        {
+            os << "\t"; // Print tabs to signify depth
+        }
+        os << current << std::endl; // O(1)
+
+        AVLNode* left = current->getLeftRef(); // O(1)
         if (left != nullptr)
         {
             this->recursivePrintNode(os, left, depth + 1); // O(N)
-            for (size_t i = 0; i < depth; i++) // worst O(N)
-            {
-                os << "\t";
-            }
-            os << left << std::endl; // O(1)
+            // for (size_t i = 0; i < depth; i++) // worst O(N)
+            // {
+            //     os << "\t";
+            // }
+            //os << left << std::endl; // O(1)
         }
         return true;
     }
     else
     {
+        for (size_t i = 0; i < depth; i++) // worst (O(N)
+        {
+            os << "\t"; // Print tabs to signify depth
+        }
+        os << current << std::endl; // O(1)
         return false;
     }
 }
@@ -861,6 +896,7 @@ AVLNode*& AVLTree::getLeftMostNodeConst(AVLNode*& node) const
  */
 void AVLTree::balanceNode(AVLNode *&node)
 {
+    node->recalculateHeight();
     int node_balance = node->getBalance(); // O(1)
     if (node_balance > 1) // O(1)
     {
