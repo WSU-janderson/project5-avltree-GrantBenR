@@ -137,46 +137,41 @@ bool AVLTree::remove(const std::string& key)
  */
 bool AVLTree::removeNode(AVLNode*& current)
 {
-    if (!current) {
+    if (current == nullptr)
         return false;
-    }
 
-    AVLNode* toDelete = current;
-    auto nChildren = current->numChildren();
     if (current->isLeaf())
     {
-        // case 1 we can deletes the node
+        delete current;
         current = nullptr;
     }
     else if (current->numChildren() == 1)
     {
-        // case 2 - replace current with its only child
-        if (current->getRight())
+        AVLNode* child = nullptr;
+        if (current->getLeft() != nullptr)
         {
-            current = current->getRight();
+            child = current->getLeft();
         }
         else
         {
-            current = current->getLeft();
+            child = current->getRight();
         }
+        delete current;
+        current = child;
     }
     else
     {
-        // case 3 - we have two children,
-        // get smallest key in right subtree by
-        // getting right child and go left until left is null
-        AVLNode* smallestInRight = this->getLeftMostNode(current->getRightRef());
-        const std::string newKey = smallestInRight->getKey();
-        const int newValue = static_cast<int>(smallestInRight->getValue());
-        removeNode(smallestInRight); // delete this one
+        AVLNode*& successor = getLeftMostNode(current->getRightRef());
 
-        current->setKey(newKey);
-        current->setValue(newValue);
+        current->setKey(successor->getKey());
+        current->setValue(successor->getValue());
+        removeNode(successor);
+    }
+    if (current)
+    {
         current->recalculateHeight();
         balanceNode(current);
-        return true; // we already deleted the one we needed to so return
     }
-    delete toDelete;
     return true;
 }
 
@@ -908,6 +903,7 @@ void AVLTree::balanceNode(AVLNode*& node)
 {
     node->recalculateHeight();
     int node_balance = node->getBalance(); // O(1)
+
     if (node_balance > 1) // O(1)
     {
         this->balanceNodePos(node);
