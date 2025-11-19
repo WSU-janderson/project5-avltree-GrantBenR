@@ -43,15 +43,15 @@ class AVLTree {
         bool removeNode(AVLNode*& current);
         bool recursiveDestroyNode(AVLNode* node_to_destroy);
         // BALANCE AND ROTATE FUNCS
-        void balanceNode(AVLNode* node);
-        void balanceNodePos(AVLNode* node);
-        void balanceNodeNeg(AVLNode* node);
+        void balanceNode(AVLNode*& node);
+        void balanceNodePos(AVLNode*& node);
+        void balanceNodeNeg(AVLNode*& node);
         AVLNode* rightRotate(AVLNode*& x_node);
-        AVLNode* leftRotate(AVLNode* x_node);
-        void leftLeftRotation(AVLNode* y_node);
-        void rightRightRotation(AVLNode* x_node);
-        void leftRightRotation(AVLNode*& node);
-        void rightLeftRotation(AVLNode* node);
+        AVLNode* leftRotate(AVLNode*& x_node);
+        AVLNode* leftLeftRotation(AVLNode*& y_node);
+        AVLNode* rightRightRotation(AVLNode*& x_node);
+        AVLNode* leftRightRotation(AVLNode*& node);
+        AVLNode* rightLeftRotation(AVLNode*& node);
     public:
         using KeyType = std::string;
         using ValueType = size_t;
@@ -72,6 +72,7 @@ class AVLTree {
         size_t getHeight() const;
         void setHeight(size_t height_value);
         AVLNode* getRoot();
+        AVLNode*& getRootRef();
         AVLNode* const& getRoot() const;
         // EQUALS AND COPY CONSTRUCTORS
         AVLTree(const AVLTree& other);

@@ -279,13 +279,13 @@ size_t AVLNode::numChildren() const
  */
 bool AVLNode::isLeaf() const
 {
-    if (getLeft() && getRight()) // O(1)
+    if (getLeft() || getRight()) // O(1)
     {
-        return true;
+        return false;
     }
     else
     {
-        return false;
+        return true;
     }
 
 }

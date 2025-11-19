@@ -90,7 +90,7 @@ bool AVLTree::insert(const std::string& key, size_t value)
         }
         else
         {
-            this->balanceNode(this->getRoot());
+            this->balanceNode(this->getRootRef());
         }
         return true;
     }
@@ -569,6 +569,19 @@ AVLNode* AVLTree::getRoot()
 }
 /**
  *
+ * Getter for root reference, non-const
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
+ * @return
+ */
+AVLNode*& AVLTree::getRootRef()
+{
+    return this->root;
+}
+/**
+ *
  * Getter for root, const
  *
  * Average Case Complexity: O(1)
@@ -771,6 +784,7 @@ std::ostream& operator<<(ostream& os, const AVLTree& avlTree)
  *
  * @param os
  * @param current
+ * @param depth
  * @return
  */
 bool AVLTree::recursivePrintNode(ostream& os, AVLNode* current, size_t depth) const
@@ -890,7 +904,7 @@ AVLNode*& AVLTree::getLeftMostNodeConst(AVLNode*& node) const
  *
  * @param node
  */
-void AVLTree::balanceNode(AVLNode* node)
+void AVLTree::balanceNode(AVLNode*& node)
 {
     node->recalculateHeight();
     int node_balance = node->getBalance(); // O(1)
@@ -908,7 +922,7 @@ void AVLTree::balanceNode(AVLNode* node)
     }
 }
 
-void AVLTree::balanceNodePos(AVLNode* node)
+void AVLTree::balanceNodePos(AVLNode*& node)
 {
     AVLNode* left_node = node->getLeft(); // O(1)
     if (left_node != nullptr)
@@ -944,7 +958,7 @@ void AVLTree::balanceNodePos(AVLNode* node)
     }
 }
 
-void AVLTree::balanceNodeNeg(AVLNode* node)
+void AVLTree::balanceNodeNeg(AVLNode*& node)
 {
     AVLNode* left_node = node->getLeft(); // O(1)
     if (left_node != nullptr)
@@ -1012,7 +1026,7 @@ AVLNode* AVLTree::rightRotate(AVLNode*& x_node)
  *
  * @param x_node
  */
-AVLNode* AVLTree::leftRotate(AVLNode* x_node)
+AVLNode* AVLTree::leftRotate(AVLNode*& x_node)
 {
     AVLNode* y_node = x_node->getRight();
     AVLNode* T2_node = y_node->getLeft();
@@ -1035,10 +1049,11 @@ AVLNode* AVLTree::leftRotate(AVLNode* x_node)
  *
  * @param y_node
  */
-void AVLTree::leftLeftRotation(AVLNode* y_node)
+AVLNode* AVLTree::leftLeftRotation(AVLNode*& y_node)
 {
 
     y_node = this->rightRotate(y_node);
+    return y_node;
 }
 
 /**
@@ -1051,9 +1066,10 @@ void AVLTree::leftLeftRotation(AVLNode* y_node)
  *
  * @param x_node
  */
-void AVLTree::rightRightRotation(AVLNode* x_node)
+AVLNode* AVLTree::rightRightRotation(AVLNode*& x_node)
 {
     x_node = this->leftRotate(x_node);
+    return x_node;
 }
 
 /**
@@ -1066,12 +1082,12 @@ void AVLTree::rightRightRotation(AVLNode* x_node)
  *
  * @param node
  */
-void AVLTree::leftRightRotation(AVLNode*& node)
+AVLNode* AVLTree::leftRightRotation(AVLNode*& node)
 {
     AVLNode* y_node = node->getLeft();
     node->setLeft(this->leftRotate(y_node));
-    this->rightRotate(node);
-    std::cout << node << std::endl;
+    node = this->rightRotate(node);
+    return node;
 }
 
 /**
@@ -1084,11 +1100,12 @@ void AVLTree::leftRightRotation(AVLNode*& node)
  *
  * @param node
  */
-void AVLTree::rightLeftRotation(AVLNode* node)
+AVLNode* AVLTree::rightLeftRotation(AVLNode*& node)
 {
     AVLNode* y_node = node->getRightRef();
     node->setRight(this->leftRotate(y_node));
     node = this->rightRotate(node);
+    return node;
 }
 
 /**
