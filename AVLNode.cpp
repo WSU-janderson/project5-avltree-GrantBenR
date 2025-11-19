@@ -210,43 +210,6 @@ void AVLNode::setHeight(const int height_value)
 
 /**
  *
- * Recalculates height of cell and sets it
- *
- * Average Case Complexity: O(N)
- * Worst Case Complexity: O(N)
- *
- * @return
- */
-int AVLNode::recalculateHeight()
-{
-    return this->recalculateHeightRecursion();
-}
-/**
- *
- * Recursive function for recalculating height
- *
- * Average Case Complexity: O(N)
- * Worst Case Complexity: O(N)
- *
- * @return
- */
-int AVLNode::recalculateHeightRecursion()
-{
-    int left_height = -1;
-    AVLNode* left_node = this->getLeft();
-    if (left_node != nullptr)
-        left_height = left_node->recalculateHeightRecursion();
-    int right_height = -1;
-    AVLNode* right_node = this->getRight();
-    if (right_node != nullptr)
-        right_height = right_node->recalculateHeightRecursion();
-
-    this->setHeight(1 + std::max(left_height, right_height));
-    return this->getHeight();
-}
-
-/**
- *
  * Gets number of direct children of a node between 0 and 2
  *
  * Average Case Complexity: O(1)

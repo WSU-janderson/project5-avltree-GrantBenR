@@ -83,6 +83,7 @@ class AVLTree {
         size_t hash(const std::string& str) const;
         size_t getIndex(AVLNode* node);
         size_t getIndex(const AVLNode* node) const;
+        void recalculateHeight(AVLNode*& node);
         // PRINTING
         bool recursivePrintNode(ostream& os, AVLNode* current, size_t depth) const;
         friend std::ostream& operator<<(ostream& os, const AVLTree& avlTree);

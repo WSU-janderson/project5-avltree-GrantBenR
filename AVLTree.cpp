@@ -9,6 +9,14 @@
  *
  */
 
+/*
+ * README
+ *
+ * Please note, whenever I mark the time complexity as O(logN), I mean O(log base 2 of N) as desired in the rubric.
+ *
+ *
+ *
+ */
 #include "AVLTree.h"
 
 #include <iostream>
@@ -18,7 +26,7 @@
 #include <vector>
 
 
-const std::hash<std::string> AVLTree::hasher = std::hash<std::string>{};
+const std::hash<std::string> AVLTree::hasher = std::hash<std::string>{}; // O(1)
 /**
  * Hash a string using the builtin static hasher defined above
  *
@@ -37,15 +45,15 @@ size_t AVLTree::hash(const std::string& str) const
  *
  * Gets hashed index value for string
  *
- * Average Case Complexity: O(logN)
- * Worst Case Complexity: O(logN)
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @param node
  * @return
  */
 size_t AVLTree::getIndex(AVLNode* node)
 {
-    return hash(node->getKey());
+    return hash(node->getKey()); // O(1)
 }
 
 /**
@@ -61,6 +69,69 @@ size_t AVLTree::getIndex(AVLNode* node)
 size_t AVLTree::getIndex(const AVLNode* node) const
 {
     return hash(node->getKey()); // O(1)
+}
+
+void AVLTree::recalculateHeight(AVLNode*& node)
+{
+    // Base case: if node is null, do nothing
+    if (node == nullptr) {
+        return;
+    }
+
+    AVLNode* leftChild = node->getLeft();
+    int leftHeight;
+    if (leftChild != nullptr)
+    {
+        leftHeight = leftChild->getHeight();
+    }
+    else
+    {
+        leftHeight = -1;
+    }
+
+    AVLNode* rightChild = node->getRight();
+    int rightHeight;
+    if (rightChild != nullptr)
+    {
+        rightHeight = rightChild->getHeight();
+    } else
+    {
+        rightHeight = -1;
+    }
+
+    // Find the new height of the node
+    int newHeight = 1 + std::max(leftHeight, rightHeight);
+
+    // Check if the height has been changed by a remove/insert/rotate etc.
+    int currentHeight = node->getHeight();
+    if (currentHeight == newHeight)
+    {
+        // Height has not changed, so we don't need to mess with the child nodes' heights
+        return;
+    }
+
+    // Update the height of the current node to this new height
+    node->setHeight(newHeight);
+
+    // If leftChild exists and the height of the parent has been updated, update its height as well
+    if (leftChild != nullptr)
+    {
+        if (leftHeight + 1 == newHeight)
+        {
+            this->recalculateHeight(leftChild);
+            return;
+        }
+    }
+
+    // If rightChild exists and the height of the parent has been updated, update its height as well
+    if (rightChild != nullptr)
+    {
+        if (rightHeight + 1 == newHeight)
+        {
+            this->recalculateHeight(rightChild);
+            return;
+        }
+    }
 }
 
 /**
@@ -83,7 +154,7 @@ bool AVLTree::insert(const std::string& key, size_t value)
     if (node == nullptr)
     {
         node = new AVLNode(key, value); // O(1)
-        this->getRoot()->recalculateHeight();
+        this->recalculateHeight(this->getRootRef()); // O(logN)
         if (this->getRoot() == nullptr) // O(1)
         {
             this->setRoot(node); // O(1)
@@ -100,6 +171,27 @@ bool AVLTree::insert(const std::string& key, size_t value)
     }
 }
 
+AVLNode* AVLTree::insertRecursion(AVLNode*& current, const size_t new_index, size_t value)
+{
+    while (current != nullptr) // O(logN)
+    {
+        size_t existing_index = this->getIndex(current); // O(1)
+
+        if (new_index < existing_index)
+        {
+            current = current->getLeftRef(); // O(1)
+        }
+        else if (new_index > existing_index)
+        {
+            current = current->getRightRef(); // O(1)
+        }
+        else
+        {
+            return current;
+        }
+    }
+    return current;
+}
 /**
  *
  * If the key is in the tree, remove() will delete the key-value pair from the tree. The memory allocated
@@ -169,7 +261,7 @@ bool AVLTree::removeNode(AVLNode*& current)
     }
     if (current)
     {
-        current->recalculateHeight();
+        this->recalculateHeight(current);
         balanceNode(current);
     }
     return true;
@@ -240,21 +332,21 @@ std::optional<size_t> AVLTree::get(const std::string& key) const
  */
 AVLNode*& AVLTree::getNode(const std::string& key)
 {
-    size_t new_index = this->hash(key);
+    size_t new_index = this->hash(key); // O(1)
 
     AVLNode** current = &this->root;
 
-    while (*current != nullptr)
+    while (*current != nullptr) // O(logN)
     {
-        size_t existing_index = this->getIndex(*current);
+        size_t existing_index = this->getIndex(*current); // O(1)
 
         if (new_index < existing_index)
         {
-            current = &((*current)->getLeftRef());
+            current = &((*current)->getLeftRef()); // O(1)
         }
         else if (new_index > existing_index)
         {
-            current = &((*current)->getRightRef());
+            current = &((*current)->getRightRef()); // O(1)
         }
         else
         {
@@ -901,7 +993,7 @@ AVLNode*& AVLTree::getLeftMostNodeConst(AVLNode*& node) const
  */
 void AVLTree::balanceNode(AVLNode*& node)
 {
-    node->recalculateHeight();
+    this->recalculateHeight(node); // O(logN)
     int node_balance = node->getBalance(); // O(1)
 
     if (node_balance > 1) // O(1)
@@ -1007,8 +1099,8 @@ AVLNode* AVLTree::rightRotate(AVLNode*& x_node)
     y_node->setRight(x_node);
     x_node->setLeft(T2_node);
 
-    x_node->recalculateHeight();
-    y_node->recalculateHeight();
+    this->recalculateHeight(x_node);
+    this->recalculateHeight(y_node);
     return y_node;
 }
 
@@ -1030,8 +1122,8 @@ AVLNode* AVLTree::leftRotate(AVLNode*& x_node)
     y_node->setLeft(x_node);
     x_node->setRight(T2_node);
 
-    x_node->recalculateHeight();
-    y_node->recalculateHeight();
+    this->recalculateHeight(x_node);
+    this->recalculateHeight(y_node);
     return y_node;
 }
 
