@@ -45,6 +45,7 @@ class AVLNode
         bool isLeaf() const;
         int getHeight() const;
         int getBalance() const;
+        AVLNode& operator=(const AVLNode& other);
         int recalculateHeight();
         friend std::ostream& operator<<(std::ostream& os, const AVLNode* avlNode);
 };

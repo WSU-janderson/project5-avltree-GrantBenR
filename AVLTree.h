@@ -27,7 +27,7 @@ class AVLTree {
         // PRIVATE SETTERS
         void setRoot(AVLNode*& new_root);
         // RECURSION FOR UTILITY FUNCTIONS
-        void equalsRecursive(const AVLNode* other_node, AVLNode*& new_node);
+        void equalsRecursive(const AVLNode* other_node, AVLNode* new_node);
         std::vector<size_t> findRangeRecursion(const AVLNode* node, std::vector<size_t> values, size_t lowIndex, size_t highIndex) const;
         size_t sizeRecursion(const AVLNode* node, size_t size_counter) const;
         std::vector<std::string> keysRecursion(const AVLNode* node, std::vector<std::string> keys_vector) const;
@@ -43,15 +43,15 @@ class AVLTree {
         bool removeNode(AVLNode*& current);
         bool recursiveDestroyNode(AVLNode* node_to_destroy);
         // BALANCE AND ROTATE FUNCS
-        void balanceNode(AVLNode*& node);
-        void balanceNodePos(AVLNode*& node);
-        void balanceNodeNeg(AVLNode*& node);
-        void rightRotate(AVLNode*& y_node);
-        void leftRotate(AVLNode*& x_node);
-        void leftLeftRotation(AVLNode*& y_node);
-        void rightRightRotation(AVLNode*& x_node);
+        void balanceNode(AVLNode* node);
+        void balanceNodePos(AVLNode* node);
+        void balanceNodeNeg(AVLNode* node);
+        AVLNode* rightRotate(AVLNode*& x_node);
+        AVLNode* leftRotate(AVLNode* x_node);
+        void leftLeftRotation(AVLNode* y_node);
+        void rightRightRotation(AVLNode* x_node);
         void leftRightRotation(AVLNode*& node);
-        void rightLeftRotation(AVLNode*& node);
+        void rightLeftRotation(AVLNode* node);
     public:
         using KeyType = std::string;
         using ValueType = size_t;
@@ -71,7 +71,7 @@ class AVLTree {
         size_t size() const;
         size_t getHeight() const;
         void setHeight(size_t height_value);
-        AVLNode*& getRoot();
+        AVLNode* getRoot();
         AVLNode* const& getRoot() const;
         // EQUALS AND COPY CONSTRUCTORS
         AVLTree(const AVLTree& other);

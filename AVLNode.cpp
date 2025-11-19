@@ -337,6 +337,17 @@ int AVLNode::getBalance() const
     return balance;
 }
 
+AVLNode& AVLNode::operator=(const AVLNode& other)
+{
+    this->key = other.key;
+    this->value = other.value;
+    this->height = other.height;
+    this->setLeft(other.getLeft());
+    this->setRight(other.getRight());
+    return *this;
+}
+
+
 /**
  *
  * ostream operator for node
