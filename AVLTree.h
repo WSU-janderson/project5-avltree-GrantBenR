@@ -27,6 +27,7 @@ class AVLTree {
         // PRIVATE SETTERS
         void setRoot(AVLNode*& new_root);
         // RECURSION FOR UTILITY FUNCTIONS
+        AVLNode* insertRecursion(AVLNode* current, std::string key, size_t new_index, size_t value, bool was_inserted);
         void equalsRecursive(const AVLNode* other_node, AVLNode* new_node);
         std::vector<size_t> findRangeRecursion(const AVLNode* node, std::vector<size_t> values, size_t lowIndex, size_t highIndex) const;
         size_t sizeRecursion(const AVLNode* node, size_t size_counter) const;

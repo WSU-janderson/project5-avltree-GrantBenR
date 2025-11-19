@@ -150,46 +150,38 @@ void AVLTree::recalculateHeight(AVLNode*& node)
  */
 bool AVLTree::insert(const std::string& key, size_t value)
 {
-    AVLNode*& node = this->getNode(key); // O(logN)
-    if (node == nullptr)
+    bool was_inserted = false;
+    this->root = insertRecursion(this->getRoot(), key, hash(key), value, was_inserted);
+    return was_inserted;
+}
+
+AVLNode* AVLTree::insertRecursion(AVLNode* current, const std::string key, const size_t new_index, size_t value, bool was_inserted)
+{
+    // if current is empty just fill it in
+    if (current == nullptr)
     {
-        node = new AVLNode(key, value); // O(1)
-        this->recalculateHeight(this->getRootRef()); // O(logN)
-        if (this->getRoot() == nullptr) // O(1)
-        {
-            this->setRoot(node); // O(1)
-        }
-        else
-        {
-            this->balanceNode(this->getRootRef());
-        }
-        return true;
+        was_inserted = true;
+        return new AVLNode(key, value); // O(1)
+    }
+
+    // get the index of current
+    size_t existing_index = this->getIndex(current); // O(1)
+
+    if (new_index < existing_index)
+    {
+        current->setLeft(insertRecursion(current->getLeftRef(), key, new_index, value, was_inserted));
+    }
+    else if (new_index > existing_index)
+    {
+        current->setRight(insertRecursion(current->getRightRef(), key, new_index, value, was_inserted)); //O(logN)
     }
     else
     {
-        return false;
+        return current;
     }
-}
 
-AVLNode* AVLTree::insertRecursion(AVLNode*& current, const size_t new_index, size_t value)
-{
-    while (current != nullptr) // O(logN)
-    {
-        size_t existing_index = this->getIndex(current); // O(1)
-
-        if (new_index < existing_index)
-        {
-            current = current->getLeftRef(); // O(1)
-        }
-        else if (new_index > existing_index)
-        {
-            current = current->getRightRef(); // O(1)
-        }
-        else
-        {
-            return current;
-        }
-    }
+    this->recalculateHeight(current); // O(logN)
+    this->balanceNode(current); // O(logN)
     return current;
 }
 /**
