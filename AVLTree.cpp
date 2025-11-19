@@ -12,9 +12,17 @@
 /*
  * README
  *
- * Please note, whenever I mark the time complexity as O(logN), I mean O(log base 2 of N) as desired in the rubric.
+ * Please note:
  *
- * I indexed using hashes rather than strings, so the order is a bit wonky compared to a traditional AVL tree.
+ * - Whenever I mark the time complexity as O(logN), I mean O(log base 2 of N) as desired in the rubric.
+ *
+ * - I index the strings based off of their std::hash() not using a string arithmetic operator. I decided this early on
+ *   and it's too late to go back now lol. Depending on the use of the tree, this could be useful or it could maybe not.
+ *   I would guess the way I am using it is just a less efficient hashtable, whereas the normal use (as in autofill in a
+ *   search bar or other implementation) relies on the original text of the word for useful comparisons. Either way, it
+ *   is what it is.
+ *
+ * - From my understanding, all my functions meet the O complexity requirements
  *
  */
 #include "AVLTree.h"
@@ -90,57 +98,58 @@ void AVLTree::recalculateHeight(AVLNode*& node)
         return;
     }
 
-    AVLNode* leftChild = node->getLeft();
-    int leftHeight;
-    if (leftChild != nullptr)
+    AVLNode* left_node = node->getLeft();
+    int left_height;
+    if (left_node != nullptr)
     {
-        leftHeight = leftChild->getHeight(); // O(1)
+        left_height = left_node->getHeight(); // O(1)
     }
     else
     {
-        leftHeight = -1;
+        left_height = -1;
     }
 
-    AVLNode* rightChild = node->getRight();
-    int rightHeight;
-    if (rightChild != nullptr)
+    AVLNode* right_node = node->getRight();
+    int right_height;
+    if (right_node != nullptr)
     {
-        rightHeight = rightChild->getHeight(); // O(1)
-    } else
+        right_height = right_node->getHeight(); // O(1)
+    }
+    else
     {
-        rightHeight = -1;
+        right_height = -1;
     }
 
     // Find the new height of the node
-    int newHeight = 1 + std::max(leftHeight, rightHeight); // O(1)
+    int new_height = 1 + std::max(left_height, right_height); // O(1)
 
     // Check if the height has been changed by a remove/insert/rotate etc.
-    int currentHeight = node->getHeight();
-    if (currentHeight == newHeight) // O(1)
+    int current_height = node->getHeight();
+    if (current_height == new_height) // O(1)
     {
         // Height has not changed, so we don't need to mess with the child nodes' heights
         return;
     }
 
     // Update the height of the current node to this new height
-    node->setHeight(newHeight); // O(1)
+    node->setHeight(new_height); // O(1)
 
     // If leftChild exists and the height of the parent has been updated, update its height as well
-    if (leftChild != nullptr)
+    if (left_node != nullptr)
     {
-        if (leftHeight + 1 == newHeight)
+        if (left_height + 1 == new_height)
         {
-            this->recalculateHeight(leftChild); // O(logN)
+            this->recalculateHeight(left_node); // O(logN)
             return;
         }
     }
 
     // If rightChild exists and the height of the parent has been updated, update its height as well
-    if (rightChild != nullptr)
+    if (right_node != nullptr)
     {
-        if (rightHeight + 1 == newHeight)
+        if (right_height + 1 == new_height)
         {
-            this->recalculateHeight(rightChild); // O(logN)
+            this->recalculateHeight(right_node); // O(logN)
             return;
         }
     }
@@ -199,10 +208,12 @@ AVLNode* AVLTree::insertRecursion(AVLNode* current, const std::string key, const
 
     if (new_index < existing_index)
     {
+        // Go down left branch
         current->setLeft(insertRecursion(current->getLeftRef(), key, new_index, value, was_inserted)); // O(logN)
     }
     else if (new_index > existing_index)
     {
+        // Go down right branch
         current->setRight(insertRecursion(current->getRightRef(), key, new_index, value, was_inserted)); //O(logN)
     }
     else
@@ -210,7 +221,7 @@ AVLNode* AVLTree::insertRecursion(AVLNode* current, const std::string key, const
         was_inserted = false;
         return current;
     }
-
+    // Update height and balance as needed
     this->recalculateHeight(current); // O(logN)
     this->balanceNode(current); // O(logN)
     return current;
@@ -1086,93 +1097,106 @@ void AVLTree::balanceNodeNeg(AVLNode*& node)
 
 /**
  *
- *          x                         y
+ * Make the problem node the right subchild of the hook node. Make the left subchild of the problem node the previous
+ * right child of the hook node
+ *
+ *          P                         H
  *         / \                       / \
- *        y   T3     ----->         T1  x
+ *        H   P1     ----->         H1  P
  *       / \                           / \
- *     T1  T2                         T2  T3
+ *     H1  H2                         H2  P1
  *
  * Average Case Complexity: O(logN)
  * Worst Case Complexity: O(logN)
  *
- * @param x_node
+ * @param problem_node
  */
-AVLNode* AVLTree::rightRotate(AVLNode*& x_node)
+AVLNode* AVLTree::rightRotate(AVLNode*& problem_node)
 {
-    AVLNode* y_node = x_node->getLeft();
-    AVLNode* T2_node = y_node->getRight();
+    AVLNode* hook_node = problem_node->getLeft();
+    // the hook node's old right node
+    AVLNode* H2_node = hook_node->getRight();
 
-    y_node->setRight(x_node);
-    x_node->setLeft(T2_node);
+    hook_node->setRight(problem_node);
+    problem_node->setLeft(H2_node);
 
-    this->recalculateHeight(x_node); // O(logN)
-    this->recalculateHeight(y_node); // O(logN)
-    return y_node;
+    this->recalculateHeight(problem_node); // O(logN)
+    this->recalculateHeight(hook_node); // O(logN)
+    // return the new "root" of the subtree which is the hook
+    return hook_node;
 }
 
 /**
  *
- *      x                                 y
+ * Make problem node the left child of hook node. Make problem child's right child the hook node's previous left child.
+ *
+ *      P                                 H
  *     / \                               / \
- *    T1  y           ----->            x   T3
+ *    P1  H           ----->            P   H2
  *       / \                           / \
- *      T2  T3                        T1  T2
+ *      H1  H2                        P1  H1
  *
  * Average Case Complexity: O(logN)
  * Worst Case Complexity: O(logN)
  *
- * @param x_node
+ * @param problem_node
  */
-AVLNode* AVLTree::leftRotate(AVLNode*& x_node)
+AVLNode* AVLTree::leftRotate(AVLNode*& problem_node)
 {
-    AVLNode* y_node = x_node->getRight();
-    AVLNode* T2_node = y_node->getLeft();
+    AVLNode* hook_node = problem_node->getRight();
+    // The hook node's old left node
+    AVLNode* H1_node = hook_node->getLeft();
 
-    y_node->setLeft(x_node);
-    x_node->setRight(T2_node);
+    hook_node->setLeft(problem_node);
+    problem_node->setRight(H1_node);
 
-    this->recalculateHeight(x_node); // O(logN)
-    this->recalculateHeight(y_node); // O(logN)
-    return y_node;
+    this->recalculateHeight(problem_node); // O(logN)
+    this->recalculateHeight(hook_node); // O(logN)
+    // hook node is our new "root" of the subtree, return it
+    return hook_node;
 }
 
 /**
  *
- *          y                         x
+ * Perform a right rotation
+ *
+ *          P                         H
  *         /                         / \
- *        x         ----->          z   y
+ *        H         ----->          H1  P
  *      /
- *     z
+ *     H1
  *
  * Average Case Complexity: O(logN)
  * Worst Case Complexity: O(logN)
  *
- * @param y_node
+ * @param problem_node
  */
-AVLNode* AVLTree::leftLeftRotation(AVLNode*& y_node)
+AVLNode* AVLTree::leftLeftRotation(AVLNode*& problem_node)
 {
 
-    y_node = this->rightRotate(y_node); // O(logN)
-    return y_node;
+    problem_node = this->rightRotate(problem_node); // O(logN)
+    return problem_node;
 }
 
 /**
  *
- *      x                                 y
+ * Perform a left rotation
+ *
+ *      P                                 H
  *       \                               / \
- *        y           ----->            x   z
+ *        H           ----->            P   H1
  *         \
- *          z
+ *          H1
  *
  * Average Case Complexity: O(logN)
  * Worst Case Complexity: O(logN)
  *
- * @param x_node
+ * @param problem_node
  */
-AVLNode* AVLTree::rightRightRotation(AVLNode*& x_node)
+AVLNode* AVLTree::rightRightRotation(AVLNode*& problem_node)
 {
-    x_node = this->leftRotate(x_node); // O(logN)
-    return x_node;
+    problem_node = this->leftRotate(problem_node); // O(logN)
+    return problem_node;
 }
 
 /**

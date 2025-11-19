@@ -47,10 +47,10 @@ class AVLTree {
         void balanceNode(AVLNode*& node);
         void balanceNodePos(AVLNode*& node);
         void balanceNodeNeg(AVLNode*& node);
-        AVLNode* rightRotate(AVLNode*& x_node);
-        AVLNode* leftRotate(AVLNode*& x_node);
-        AVLNode* leftLeftRotation(AVLNode*& y_node);
-        AVLNode* rightRightRotation(AVLNode*& x_node);
+        AVLNode* rightRotate(AVLNode*& problem_node);
+        AVLNode* leftRotate(AVLNode*& problem_node);
+        AVLNode* leftLeftRotation(AVLNode*& problem_node);
+        AVLNode* rightRightRotation(AVLNode*& problem_node);
         AVLNode* leftRightRotation(AVLNode*& node);
         AVLNode* rightLeftRotation(AVLNode*& node);
     public:
