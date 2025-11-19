@@ -219,39 +219,19 @@ void AVLNode::setHeight(const size_t height_value)
  */
 size_t AVLNode::recalculateHeight()
 {
-    return this->recalculateHeightRecursion(0);
+    return this->recalculateHeightRecursion();
 }
-size_t AVLNode::recalculateHeightRecursion(size_t init_height)
+size_t AVLNode::recalculateHeightRecursion()
 {
-    size_t total_height = 0;
-    if (!(this->isLeaf()))
-    {
-        AVLNode** left_ptr = &(this->getLeftRef());
-        AVLNode** right_ptr = &(this->getRightRef());
-        if (*left_ptr != nullptr)
-        {
-            size_t left_height = 0;
-            (*left_ptr)->setHeight(init_height + 1);
-            left_height = (*left_ptr)->recalculateHeightRecursion(init_height + 1);
-            if (left_height > total_height)
-            {
-                total_height = left_height;
-            }
-        }
-        if (*right_ptr != nullptr)
-        {
-            size_t right_height = 0;
-            (*right_ptr)->setHeight(init_height + 1);
-            right_height = (*right_ptr)->recalculateHeightRecursion(init_height + 1);
+    size_t left_height = 0;
+    if (left != nullptr)
+        left_height = this->getLeft()->recalculateHeightRecursion();
+    size_t right_height = 0;
+    if (right != nullptr)
+        right_height = this->getRight()->recalculateHeightRecursion();
 
-            if (right_height > total_height)
-            {
-                total_height = right_height;
-            }
-        }
-    }
-    this->setHeight(total_height);
-    return total_height;
+    this->setHeight(1 + std::max(left_height, right_height));
+    return this->getHeight();
 }
 
 /**

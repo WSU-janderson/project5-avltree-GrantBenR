@@ -23,6 +23,8 @@ class AVLNode
         size_t height;
         AVLNode* left;
         AVLNode* right;
+        size_t recalculateHeightRecursion();
+
     public:
         AVLNode();
         AVLNode(std::string  key, size_t value);
@@ -44,7 +46,6 @@ class AVLNode
         size_t getHeight() const;
         int getBalance() const;
         size_t recalculateHeight();
-        size_t recalculateHeightRecursion(size_t init_height);
         friend std::ostream& operator<<(std::ostream& os, const AVLNode* avlNode);
 };
 
