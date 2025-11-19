@@ -537,7 +537,9 @@ std::vector<std::string> AVLTree::keys() const
     AVLNode* root_node = this->getRoot();
     if (root_node != nullptr)
     {
+        keys_vector.emplace_back(root_node->getKey());
         return keysRecursion(root_node, keys_vector); // O(N)
+
     }
     else
     {

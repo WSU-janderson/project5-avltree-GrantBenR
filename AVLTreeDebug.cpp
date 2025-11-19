@@ -120,5 +120,11 @@ int main() {
     std::cout << "TREE AFTER REMOVE PART 4: " << removeResult << std::endl;
     std::cout << tree << std::endl;
 
+    std::cout << "TREE KEYS: " << std::endl;
+    auto keys = tree.keys();
+    for (auto key: keys)
+    {
+        std::cout << key << std::endl;
+    }
     return 0;
 }
