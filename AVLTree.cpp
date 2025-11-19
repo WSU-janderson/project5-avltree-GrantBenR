@@ -792,11 +792,6 @@ bool AVLTree::recursivePrintNode(ostream& os, AVLNode* current, size_t depth) co
         if (left != nullptr)
         {
             this->recursivePrintNode(os, left, depth + 1); // O(N)
-            // for (size_t i = 0; i < depth; i++) // worst O(N)
-            // {
-            //     os << "\t";
-            // }
-            //os << left << std::endl; // O(1)
         }
         return true;
     }
@@ -914,7 +909,7 @@ void AVLTree::balanceNode(AVLNode *&node)
 
 void AVLTree::balanceNodePos(AVLNode*& node)
 {
-    AVLNode*& left_node = node->getLeftRef(); // O(1)
+    AVLNode* left_node = node->getLeft(); // O(1)
     if (left_node != nullptr)
     {
         int left_balance = left_node->getBalance(); // O(1)
@@ -1021,10 +1016,10 @@ void AVLTree::rightRotate(AVLNode*& y_node)
  */
 void AVLTree::leftRotate(AVLNode*& x_node)
 {
-    AVLNode*& y_node = x_node->getRightRef();
-    AVLNode*& T1_node = x_node->getLeftRef();
-    AVLNode*& T2_node = y_node->getLeftRef();
-    AVLNode*& T3_node = y_node->getRightRef();
+    AVLNode* y_node = x_node->getRightRef();
+    AVLNode* T1_node = x_node->getLeft();
+    AVLNode* T2_node = y_node->getLeftRef();
+    AVLNode* T3_node = y_node->getRightRef();
 
     y_node->setRight(T3_node);
     y_node->setLeft(x_node);
@@ -1077,7 +1072,7 @@ void AVLTree::rightRightRotation(AVLNode *&x_node)
  */
 void AVLTree::leftRightRotation(AVLNode *&node)
 {
-    AVLNode* first_rot_node = node->getLeftRef();
+    AVLNode* first_rot_node = node->getLeft();
     this->leftRotate(first_rot_node);
     this->rightRotate(node);
 }

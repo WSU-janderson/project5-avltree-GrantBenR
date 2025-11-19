@@ -203,7 +203,7 @@ size_t& AVLNode::getValueRef()
  *
  * @param height_value
  */
-void AVLNode::setHeight(const size_t height_value)
+void AVLNode::setHeight(const int height_value)
 {
     this->height = height_value;
 }
@@ -212,23 +212,34 @@ void AVLNode::setHeight(const size_t height_value)
  *
  * Recalculates height of cell and sets it
  *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
+ * Average Case Complexity: O(N)
+ * Worst Case Complexity: O(N)
  *
  * @return
  */
-size_t AVLNode::recalculateHeight()
+int AVLNode::recalculateHeight()
 {
     return this->recalculateHeightRecursion();
 }
-size_t AVLNode::recalculateHeightRecursion()
+/**
+ *
+ * Recursive function for recalculating height
+ *
+ * Average Case Complexity: O(N)
+ * Worst Case Complexity: O(N)
+ *
+ * @return
+ */
+int AVLNode::recalculateHeightRecursion()
 {
-    size_t left_height = 0;
-    if (left != nullptr)
-        left_height = this->getLeft()->recalculateHeightRecursion();
-    size_t right_height = 0;
-    if (right != nullptr)
-        right_height = this->getRight()->recalculateHeightRecursion();
+    int left_height = -1;
+    AVLNode* left_node = this->getLeft();
+    if (left_node != nullptr)
+        left_height = left_node->recalculateHeightRecursion();
+    int right_height = -1;
+    AVLNode* right_node = this->getRight();
+    if (right_node != nullptr)
+        right_height = right_node->recalculateHeightRecursion();
 
     this->setHeight(1 + std::max(left_height, right_height));
     return this->getHeight();
@@ -288,7 +299,7 @@ bool AVLNode::isLeaf() const
  *
  * @return
  */
-size_t AVLNode::getHeight() const
+int AVLNode::getHeight() const
 {
     return this->height;
 }

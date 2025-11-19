@@ -20,10 +20,10 @@ class AVLNode
     private:
         std::string key;
         size_t value;
-        size_t height;
+        int height;
         AVLNode* left;
         AVLNode* right;
-        size_t recalculateHeightRecursion();
+        int recalculateHeightRecursion();
 
     public:
         AVLNode();
@@ -40,12 +40,12 @@ class AVLNode
         void setValue(size_t new_value);
         size_t getValue() const;
         size_t& getValueRef();
-        void setHeight(size_t height_value);
+        void setHeight(int height_value);
         size_t numChildren() const;
         bool isLeaf() const;
-        size_t getHeight() const;
+        int getHeight() const;
         int getBalance() const;
-        size_t recalculateHeight();
+        int recalculateHeight();
         friend std::ostream& operator<<(std::ostream& os, const AVLNode* avlNode);
 };
 
