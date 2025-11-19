@@ -14,7 +14,7 @@
  *
  * Please note, whenever I mark the time complexity as O(logN), I mean O(log base 2 of N) as desired in the rubric.
  *
- *
+ * I indexed using hashes rather than strings, so the order is a bit wonky compared to a traditional AVL tree.
  *
  */
 #include "AVLTree.h"
