@@ -22,12 +22,12 @@ class AVLTree {
     private:
         // PRIVATE VARIABLES
         AVLNode* root;
-        size_t height;
+        size_t size_value;
         static const std::hash<std::string> hasher;
         // PRIVATE SETTERS
         void setRoot(AVLNode*& new_root);
         // RECURSION FOR UTILITY FUNCTIONS
-        AVLNode* insertRecursion(AVLNode* current, std::string key, size_t new_index, size_t value, bool was_inserted);
+        AVLNode* insertRecursion(AVLNode* current, std::string key, size_t new_index, size_t value, bool& was_inserted);
         void equalsRecursive(const AVLNode* other_node, AVLNode* new_node);
         std::vector<size_t> findRangeRecursion(const AVLNode* node, std::vector<size_t> values, size_t lowIndex, size_t highIndex) const;
         size_t sizeRecursion(const AVLNode* node, size_t size_counter) const;
@@ -70,6 +70,7 @@ class AVLTree {
         std::vector<size_t> findRange(const std::string& lowKey, const std::string& highKey) const;
         std::vector<std::string> keys() const;
         size_t size() const;
+        size_t setSize(size_t new_size_value);
         size_t getHeight() const;
         void setHeight(size_t height_value);
         AVLNode* getRoot();

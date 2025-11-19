@@ -71,10 +71,22 @@ size_t AVLTree::getIndex(const AVLNode* node) const
     return hash(node->getKey()); // O(1)
 }
 
+/**
+ *
+ * Recalculates the height of a given node. Selectively chooses nodes that have heights that are off from what they
+ * should be and deliberately searches only their subtrees. This makes the complexity O(logN) compared to the O(N)
+ * approach of checking every possible node (which I had for the majority of the program's life)
+ *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
+ * @param node
+ */
 void AVLTree::recalculateHeight(AVLNode*& node)
 {
-    // Base case: if node is null, do nothing
-    if (node == nullptr) {
+    // Base case: if node is null, the height is uneditable so return
+    if (node == nullptr)
+    {
         return;
     }
 
@@ -82,7 +94,7 @@ void AVLTree::recalculateHeight(AVLNode*& node)
     int leftHeight;
     if (leftChild != nullptr)
     {
-        leftHeight = leftChild->getHeight();
+        leftHeight = leftChild->getHeight(); // O(1)
     }
     else
     {
@@ -93,32 +105,32 @@ void AVLTree::recalculateHeight(AVLNode*& node)
     int rightHeight;
     if (rightChild != nullptr)
     {
-        rightHeight = rightChild->getHeight();
+        rightHeight = rightChild->getHeight(); // O(1)
     } else
     {
         rightHeight = -1;
     }
 
     // Find the new height of the node
-    int newHeight = 1 + std::max(leftHeight, rightHeight);
+    int newHeight = 1 + std::max(leftHeight, rightHeight); // O(1)
 
     // Check if the height has been changed by a remove/insert/rotate etc.
     int currentHeight = node->getHeight();
-    if (currentHeight == newHeight)
+    if (currentHeight == newHeight) // O(1)
     {
         // Height has not changed, so we don't need to mess with the child nodes' heights
         return;
     }
 
     // Update the height of the current node to this new height
-    node->setHeight(newHeight);
+    node->setHeight(newHeight); // O(1)
 
     // If leftChild exists and the height of the parent has been updated, update its height as well
     if (leftChild != nullptr)
     {
         if (leftHeight + 1 == newHeight)
         {
-            this->recalculateHeight(leftChild);
+            this->recalculateHeight(leftChild); // O(logN)
             return;
         }
     }
@@ -128,7 +140,7 @@ void AVLTree::recalculateHeight(AVLNode*& node)
     {
         if (rightHeight + 1 == newHeight)
         {
-            this->recalculateHeight(rightChild);
+            this->recalculateHeight(rightChild); // O(logN)
             return;
         }
     }
@@ -151,11 +163,29 @@ void AVLTree::recalculateHeight(AVLNode*& node)
 bool AVLTree::insert(const std::string& key, size_t value)
 {
     bool was_inserted = false;
-    this->root = insertRecursion(this->getRoot(), key, hash(key), value, was_inserted);
+    this->root = insertRecursion(this->getRoot(), key, hash(key), value, was_inserted); // O(logN)
+    if (was_inserted)
+    {
+        this->setSize(this->size() + 1);
+    }
     return was_inserted;
 }
 
-AVLNode* AVLTree::insertRecursion(AVLNode* current, const std::string key, const size_t new_index, size_t value, bool was_inserted)
+/**
+ *
+ * Recursively check, balance, and adjust height of nodes as you insert new node
+ *
+ * Average Case Complexity: O(logN)
+ * Worst Case Complexity: O(logN)
+ *
+ * @param current
+ * @param key
+ * @param new_index
+ * @param value
+ * @param was_inserted
+ * @return
+ */
+AVLNode* AVLTree::insertRecursion(AVLNode* current, const std::string key, const size_t new_index, size_t value, bool& was_inserted)
 {
     // if current is empty just fill it in
     if (current == nullptr)
@@ -169,7 +199,7 @@ AVLNode* AVLTree::insertRecursion(AVLNode* current, const std::string key, const
 
     if (new_index < existing_index)
     {
-        current->setLeft(insertRecursion(current->getLeftRef(), key, new_index, value, was_inserted));
+        current->setLeft(insertRecursion(current->getLeftRef(), key, new_index, value, was_inserted)); // O(logN)
     }
     else if (new_index > existing_index)
     {
@@ -177,6 +207,7 @@ AVLNode* AVLTree::insertRecursion(AVLNode* current, const std::string key, const
     }
     else
     {
+        was_inserted = false;
         return current;
     }
 
@@ -202,7 +233,8 @@ bool AVLTree::remove(const std::string& key)
     AVLNode*& node_to_delete = this->getNode(key);
     if (node_to_delete != nullptr)
     {
-        removeNode(node_to_delete);
+        removeNode(node_to_delete); // O(logN)
+        this->setSize(this->size() - 1);
     }
     else
     {
@@ -212,6 +244,7 @@ bool AVLTree::remove(const std::string& key)
 
 /**
  *
+ * Recursive function of remove. Goes down and up tree recursively and rebalances as needed
  *
  * Average Case Complexity: O(logN)
  * Worst Case Complexity: O(logN)
@@ -245,11 +278,11 @@ bool AVLTree::removeNode(AVLNode*& current)
     }
     else
     {
-        AVLNode*& successor = getLeftMostNode(current->getRightRef());
+        AVLNode*& successor = getLeftMostNode(current->getRightRef()); //O(logN)
 
         current->setKey(successor->getKey());
         current->setValue(successor->getValue());
-        removeNode(successor);
+        removeNode(successor); // O(logN)
     }
     if (current)
     {
@@ -551,25 +584,32 @@ std::vector<std::string> AVLTree::keysRecursion(const AVLNode* node, std::vector
  *
  * The size() method returns how many key-value pairs are in the tree.
  *
- * Average Case Complexity: O(N)
- * Worst Case Complexity: O(N)
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
  *
  * @return
  */
 size_t AVLTree::size() const
 {
-    AVLNode* root_node = this->getRoot();
-    if (root_node != nullptr)
-    {
-        return sizeRecursion(root_node, 0); // O(N)
-    }
-    else
-    {
-        return 0;
-    }
+    return this->size_value;
 }
-
 /**
+ *
+ * Setter for size
+ *
+ * Average Case Complexity: O(1)
+ * Worst Case Complexity: O(1)
+ *
+ * @param new_size_value
+ * @return
+ */
+size_t AVLTree::setSize(size_t new_size_value)
+{
+    return this->size_value = new_size_value;
+}
+/**
+ *
+ * DEPRECATED
  *
  * Recursively find all nodes in tree and count them to find total size
  *
@@ -615,22 +655,11 @@ size_t AVLTree::sizeRecursion(const AVLNode* node, size_t size_counter) const
 size_t AVLTree::getHeight() const
 {
     // height of the tree every time it is inserted into
-    return this->height;
-}
-
-/**
- *
- * Setter for height
- *
- * Average Case Complexity: O(1)
- * Worst Case Complexity: O(1)
- *
- * @return
- */
-void AVLTree::setHeight(size_t height_value)
-{
-    // height of the tree every time it is inserted into
-    this->height = height_value;
+    AVLNode* root_node = this->getRoot();
+    if (root_node != nullptr)
+    {
+        return root_node->getHeight();
+    }
 }
 
 /**
@@ -715,7 +744,6 @@ AVLTree::AVLTree(const AVLTree& other) : root(nullptr)
     if (other_root != nullptr)
     {
         this->equalsRecursive(other_root, this->getRoot());
-        this->setHeight(other.getHeight());
     }
 }
 
@@ -748,7 +776,6 @@ AVLTree& AVLTree::operator=(const AVLTree& other)
     if (other_root != nullptr)
     {
         this->equalsRecursive(other_root, this->getRoot());
-        this->setHeight(other.getHeight());
         return *this;
     }
     else
@@ -770,7 +797,6 @@ AVLTree& AVLTree::operator=(const AVLTree& other)
 void AVLTree::equalsRecursive(const AVLNode* other_node, AVLNode* new_node)
 {
     new_node = new AVLNode(other_node->getKey(), other_node->getValue());
-    new_node->setHeight(other_node->getHeight());
     if (!other_node->isLeaf())
     {
         const AVLNode* other_left = other_node->getLeft();
